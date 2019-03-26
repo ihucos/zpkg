@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+"""usage: zpkg {add,ls,rm} ...
+
+Subcommands:
+
+    add [PROGRAM] BUILD-ARGS
+        blah blah
+
+    ls
+        List all installed commands
+
+    package PROGRAM OUTPUT-FILE
+        Create a packge that can be run anywhere
+
+    punch
+        Shrink build cache and cleanup.
+
+    rm [PKG1 [PKG2 [PKG3 ...]]]
+        Uninstall given packages
+
+
+Example:
+    $ zpkg add xeyes -U x11-apps
+    $ zpkg add gimp -A gimp
+    $ zpkg ls
+    gimp
+    xeyes
+    $ zpkg rm xeyes gimp
+"""
+
+import sys, os, subprocess, shutil, tempfile
+from os.path import join
+
+BCHROOT_FILE = os.path.expanduser("~/mypkg/bchroot")
+BOOTSTRAP_SCRIPT = os.path.expanduser("~/mypkg/bootstrap.sh")
+DATADIR = os.path.expanduser("~/.zpkg/data")
+BINDIR = os.path.expanduser("~/bin")
+os.environ["PLASH_DATA"] = os.path.expanduser("~/.zpkg/plashdata")
+LIST_ALL_CMD = [
+    'sh', '-c',
+    "echo -n $PATH | tr : '\n' | xargs -I {} find {} -maxdepth 1 -perm /u=x,g=x,o=x \( -type f -or -type l \) 2> /dev/null | sort -u"
+]
+
+
+def usage():
+    print(__doc__)
+    sys.exit(1)
+
+
+def die(msg):
+    print("zpkg error: {}".format(msg), file=sys.stderr)
+    sys.exit(1)
+
+
+def info(msg):
+    print("zpkg: {}".format(msg), file=sys.stderr)
+
+
+def plash_call(*args):
+    try:
+        return subprocess.check_output(["plash"] +
+                                       list(args)).decode().strip("\n")
+    except subprocess.CalledProcessError as exc:
+        sys.exit(1)
+
+
+def very_magic_guess(newcmds, buildargs):
+    if not newcmds:
+        die("no new command found")
+    if len(newcmds) == 1:
+        return list(newcmds)[0]
+    for token in buildargs:
+        if token in newcmds:
+            return token
+    for cmd in sorted(newcmds, key=len):
+        for token in buildargs:
+            if token in cmd:
+                return cmd
+    die("unguessable program, choose yourself: {}".format(' '.join(newcmds)))
+
+
+if not len(sys.argv) >= 2:
+    usage()
+
+if sys.argv[1] in ["-h", "--help"]:
+    usage()
+
+if not sys.argv[1] in ["add", "ls", "rm", "punch"]:
+    usage()
+
+plash_call("init")
+os.makedirs(DATADIR, exist_ok=True)
+os.makedirs(BINDIR, exist_ok=True)
+
+#####
+# zpkg ls
+#####
+if sys.argv[1] == "ls":
+    for pkg in os.listdir(DATADIR):
+        print(pkg)
+        #release_file = join(DATADIR, pkg, "rootfs/etc/os-release")
+        #osname = subprocess.check_output(["sh", "-c", '. "$1"; echo $PRETTY_NAME', "--", release_file]).decode().strip("\n")
+        #print("{: <12} {}".format(pkg, osname))
+
+#####
+# zpkg rm
+#####
+elif sys.argv[1] == "rm":
+    for pkg in sys.argv[2:]:
+        if not os.path.exists(os.path.join(DATADIR, pkg)):
+            die("{} is not installed".format(pkg))
+        try:
+            shutil.rmtree(os.path.join(DATADIR, pkg))
+        except OSError as exc:
+            info("rm {}: {}".format(pkg, exc))
+        else:
+            cont = plash_call("map", pkg)
+            if cont:
+                plash_call("rm", cont)
+            info("removed: {}".format(pkg))
+
+#####
+# zpkg punch
+#####
+elif sys.argv[1] == "punch":
+    plash_call("shrink")
+    plash_call("clean")
+
+#####
+# zpkg add
+#####
+elif sys.argv[1] == "add":
+    if len(sys.argv) <= 2:
+        die("zpkg add: missing arguments")
+
+    if sys.argv[2].startswith("-"):
+        sys.argv.insert(2, "?")
+
+    if not sys.argv[3:]:
+        die("zpkg add: build arguments missing")
+
+    if not sys.argv[3].startswith("-"):
+        die("zpkg add: build argument can not be positional argument")
+
+    if sys.argv[2] != '?' and os.path.exists(join(DATADIR, sys.argv[2])):
+        die("{} already installed".format(sys.argv[2]))
+
+    tmpdir = tempfile.mkdtemp()
+    builded = plash_call("build", "--hash-path", BOOTSTRAP_SCRIPT, "-x",
+                         BOOTSTRAP_SCRIPT, "--layer", *sys.argv[2:])
+    plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
+    parent = plash_call("parent", builded)
+    orig_cmds = set(plash_call('run', parent, *LIST_ALL_CMD).splitlines())
+    after_cmds = set(plash_call('run', builded, *LIST_ALL_CMD).splitlines())
+    new_cmds = sorted([os.path.basename(i) for i in (after_cmds - orig_cmds)])
+
+    if not new_cmds:
+        die("no new binaries found")
+    if sys.argv[2] == "?":
+        sys.argv[2] = very_magic_guess(new_cmds, sys.argv[3:])
+        info("guessed your program with pure magic: {}".format(sys.argv[2]))
+    elif sys.argv[2] not in new_cmds:
+        die("program {} not found, but found: {}".format(
+            sys.argv[2], new_cmds))
+    if os.path.exists(join(DATADIR, sys.argv[2])):
+        die("{} already installed".format(sys.argv[2]))
+
+    targetdir = join(DATADIR, sys.argv[2])
+    launcher = join(BINDIR, sys.argv[2])
+    os.link(BCHROOT_FILE, join(tmpdir, sys.argv[2]))
+    os.rename(tmpdir, targetdir)
+    try:
+        os.unlink(launcher)
+    except FileNotFoundError:
+        pass
+    os.symlink(join(targetdir, sys.argv[2]), launcher)
+    print()
+    print("installed data     to: {}".format(targetdir))
+    print("installed launcher to: {}".format(launcher))
+
+    # map it, so it can be deleted
+    plash_call("map", sys.argv[2], builded)
