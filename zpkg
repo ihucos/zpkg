@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""usage: zpkg {add,ls,rm} ...
+"""usage: zpkg [--global] {add,ls,rm} ...
 
 Subcommands:
 
@@ -10,7 +10,7 @@ Subcommands:
         List all installed commands
 
     package PROGRAM OUTPUT-FILE
-        Create a packge that can be run anywhere
+        Create a package that can be installed anywhere
 
     punch
         Shrink build cache and cleanup.
@@ -28,14 +28,24 @@ Example:
     $ zpkg rm xeyes gimp
 """
 
-import sys, os, subprocess, shutil, tempfile
+import sys, os, subprocess, shutil, tempfile, shlex
 from os.path import join
 
 BCHROOT_FILE = os.path.expanduser("~/mypkg/bchroot")
 BOOTSTRAP_SCRIPT = os.path.expanduser("~/mypkg/bootstrap.sh")
-DATADIR = os.path.expanduser("~/.zpkg/data")
-BINDIR = os.path.expanduser("~/bin")
-os.environ["PLASH_DATA"] = os.path.expanduser("~/.zpkg/plashdata")
+
+if len(sys.argv) > 1 and sys.argv[1] == '--global':
+    sys.argv.pop(1)
+    DATADIR = "/usr/local/lib/zpkg"
+    BINDIR = "/usr/local/bin"
+    PLASH_DATA = "/var/cache/zpkg"
+else:
+    DATADIR = os.path.expanduser("~/.local/lib/zpkg")
+    BINDIR = os.path.expanduser("~/.local/bin")
+    PLASH_DATA = os.path.expanduser("~/.cache/zpkg")
+
+
+os.environ["PLASH_DATA"] =  PLASH_DATA
 LIST_ALL_CMD = [
     'sh', '-c',
     "echo -n $PATH | tr : '\n' | xargs -I {} find {} -maxdepth 1 -perm /u=x,g=x,o=x \( -type f -or -type l \) 2> /dev/null | sort -u"
@@ -79,18 +89,25 @@ def very_magic_guess(newcmds, buildargs):
     die("unguessable program, choose yourself: {}".format(' '.join(newcmds)))
 
 
+def assert_is_installed(pkg):
+    if not os.path.exists(join(DATADIR, pkg)):
+        die("{} is not installed".format(pkg))
+
+
 if not len(sys.argv) >= 2:
     usage()
 
 if sys.argv[1] in ["-h", "--help"]:
     usage()
 
-if not sys.argv[1] in ["add", "ls", "rm", "punch"]:
+if not sys.argv[1] in ["add", "ls", "rm", "punch", "package"]:
     usage()
 
-plash_call("init")
 os.makedirs(DATADIR, exist_ok=True)
 os.makedirs(BINDIR, exist_ok=True)
+
+if sys.argv[1] not in ("package", "ls"):
+    plash_call("init")
 
 #####
 # zpkg ls
@@ -107,17 +124,20 @@ if sys.argv[1] == "ls":
 #####
 elif sys.argv[1] == "rm":
     for pkg in sys.argv[2:]:
-        if not os.path.exists(os.path.join(DATADIR, pkg)):
-            die("{} is not installed".format(pkg))
+        assert_is_installed(pkg)
         try:
             shutil.rmtree(os.path.join(DATADIR, pkg))
         except OSError as exc:
             info("rm {}: {}".format(pkg, exc))
-        else:
-            cont = plash_call("map", pkg)
-            if cont:
-                plash_call("rm", cont)
-            info("removed: {}".format(pkg))
+            continue
+        try:
+            os.unlink(join(BINDIR, pkg))
+        except FileNotFoundError:
+            pass
+        cont = plash_call("map", pkg)
+        if cont:
+            plash_call("rm", cont)
+        info("removed: {}".format(pkg))
 
 #####
 # zpkg punch
@@ -125,6 +145,30 @@ elif sys.argv[1] == "rm":
 elif sys.argv[1] == "punch":
     plash_call("shrink")
     plash_call("clean")
+
+#####
+# zpkg package
+#####
+elif sys.argv[1] == "package":
+    if len(sys.argv) < 3:
+        die("usage: zpkg [--global] package PROGRAM OUTFILE")
+    assert_is_installed(sys.argv[2])
+    plash_call(
+        "sudo",
+        "tar",
+        "-C",
+        os.path.dirname(BINDIR),
+        "-cf", sys.argv[3],
+        join("bin", sys.argv[2]),
+        join("lib/zpkg", sys.argv[2])
+    )
+    print((
+    "Install package locally:\n"
+    "$ tar -xf {0} -C ~/.local \n"
+    "\n"
+    "Install package globally:\n"
+    "$ tar -xf {0} -C /usr/local"
+    ).format(shlex.quote(sys.argv[3])))
 
 #####
 # zpkg add
@@ -149,6 +193,7 @@ elif sys.argv[1] == "add":
     builded = plash_call("build", "--hash-path", BOOTSTRAP_SCRIPT, "-x",
                          BOOTSTRAP_SCRIPT, "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
+    os.chmod(join(tmpdir, "rootfs"), 0o755)
     parent = plash_call("parent", builded)
     orig_cmds = set(plash_call('run', parent, *LIST_ALL_CMD).splitlines())
     after_cmds = set(plash_call('run', builded, *LIST_ALL_CMD).splitlines())
@@ -169,11 +214,12 @@ elif sys.argv[1] == "add":
     launcher = join(BINDIR, sys.argv[2])
     os.link(BCHROOT_FILE, join(tmpdir, sys.argv[2]))
     os.rename(tmpdir, targetdir)
+    os.chmod(targetdir, 0o755)
     try:
         os.unlink(launcher)
     except FileNotFoundError:
         pass
-    os.symlink(join(targetdir, sys.argv[2]), launcher)
+    os.symlink(join("../lib/zpkg", sys.argv[2], sys.argv[2]), launcher)
     print()
     print("installed data     to: {}".format(targetdir))
     print("installed launcher to: {}".format(launcher))
