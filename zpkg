@@ -189,7 +189,7 @@ elif sys.argv[1] == "add":
     if sys.argv[2] != '?' and os.path.exists(join(DATADIR, sys.argv[2])):
         die("{} already installed".format(sys.argv[2]))
 
-    tmpdir = tempfile.mkdtemp()
+    tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp")) # reuse plash's tmp
     builded = plash_call("build", "--hash-path", BOOTSTRAP_SCRIPT, "-x",
                          BOOTSTRAP_SCRIPT, "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
