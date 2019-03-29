@@ -131,9 +131,6 @@ if sys.argv[1] not in ("package", "ls"):
 if sys.argv[1] == "ls":
     for pkg in os.listdir(DATADIR):
         print(pkg)
-        #release_file = join(DATADIR, pkg, "rootfs/etc/os-release")
-        #osname = subprocess.check_output(["sh", "-c", '. "$1"; echo $PRETTY_NAME', "--", release_file]).decode().strip("\n")
-        #print("{: <12} {}".format(pkg, osname))
 
 #####
 # zpkg rm
@@ -147,8 +144,8 @@ elif sys.argv[1] == "rm":
         plash_call("rm", cont)
         plash_call("clean")
 
-    plash_call("sudo", "rm", "-rf",
-        join(DATADIR, sys.argv[2]), join(BINDIR, sys.argv[2]))
+    plash_call("sudo", "rm", "-rf", join(DATADIR, sys.argv[2]),
+               join(BINDIR, sys.argv[2]))
 
 #####
 # zpkg punch
@@ -208,8 +205,8 @@ elif sys.argv[1] == "add":
         sys.argv[2] = very_magic_guess(new_cmds, sys.argv[3:])
         info("guessed your command name: {}".format(sys.argv[2]))
     elif sys.argv[2] not in new_cmds:
-        die("command {} not found after build finished, but there is: {}".format(
-            repr(sys.argv[2]), ' '.join(new_cmds)))
+        die("command {} not found after build finished, but there is: {}".
+            format(repr(sys.argv[2]), ' '.join(new_cmds)))
     if os.path.exists(join(DATADIR, sys.argv[2])):
         die("package {} is already installed".format(repr(sys.argv[2])))
 
@@ -227,7 +224,8 @@ elif sys.argv[1] == "add":
     home = os.path.expanduser('~')
     datadir = targetdir.replace(home, '~')
     launcher = launcher.replace(home, '~')
-    print("zpkg: succesfully installed {} to {}, linked to {}".format(repr(sys.argv[2]), datadir, launcher))
+    print("zpkg: succesfully installed {} to {}, linked to {}".format(
+        repr(sys.argv[2]), datadir, launcher))
     #print("linked to: {}".format(launcher))
 
     # map it, so it can be deleted
