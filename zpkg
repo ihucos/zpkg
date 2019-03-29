@@ -1,23 +1,45 @@
 #!/usr/bin/env python3
-"""usage: zpkg [--global] {add,ls,rm} ...
+"""usage: zpkg [-g] {add,export,ls,punch,rm} ...
 
 Subcommands:
+   add [PKG] BUILD-ARGS   builds and adds a package
+   export PKG FILE        creates an installabe export
+   ls                     lists all installed packages
+   punch                  shrinks build cache and cleanup
+   rm PKG                 uninstalls the given package
 
-    add [PROGRAM] BUILD-ARGS
-        blah blah
+Global Arguments:
+    --global, -g
+        Affects the system globally
 
-    ls
-        List all installed commands
-
-    package PROGRAM OUTPUT-FILE
-        Create a package that can be installed anywhere
-
-    punch
-        Shrink build cache and cleanup.
-
-    rm [PKG1 [PKG2 [PKG3 ...]]]
-        Uninstall given packages
-
+Build Arguments:
+    --from, -f
+        choose a base image
+    --from-url
+        use a tar file over http as base image
+    --run, -x
+        run any shell (/bin/sh) command
+    --layer, -l
+        adds layer for build chaing
+    --from-github
+        build according to instruction at github project
+    --apt, --apk, --apt, --defpm, --dnf, --emerge, --npm, --pacman, --pip,
+    --pip3, --yum
+        Invokes the given tool with it's primary action
+    -A
+        macro for: --from alpine --apk
+    -C
+        macro for: --from centos --yum
+    -D
+        macro for: --from debian --apt
+    -F
+        macro for: --from fedora --dnf
+    -G
+        macro for: --from gentoo --emerge
+    -R
+        macro for: --from archlinux --pacman
+    -U
+        macro for: --from ubuntu --apt
 
 Example:
     $ zpkg add xeyes -U x11-apps
@@ -26,6 +48,7 @@ Example:
     gimp
     xeyes
     $ zpkg rm xeyes gimp
+
 """
 
 import sys, os, subprocess, shutil, tempfile, shlex
@@ -37,7 +60,7 @@ BOOTSTRAP_SCRIPT = join(dir_path, 'bootstrap.sh')
 
 os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] + os.environ.get("PATH").split(":"))
 
-if len(sys.argv) > 1 and sys.argv[1] == '--global':
+if len(sys.argv) > 1 and sys.argv[1] in ('-g', '--global'):
     sys.argv.pop(1)
     DATADIR = "/usr/local/lib/zpkg"
     BINDIR = "/usr/local/bin"
@@ -103,13 +126,13 @@ if not len(sys.argv) >= 2:
 if sys.argv[1] in ["-h", "--help"]:
     usage()
 
-if not sys.argv[1] in ["add", "ls", "rm", "punch", "package"]:
+if not sys.argv[1] in ["add", "ls", "rm", "punch", "export"]:
     usage()
 
 os.makedirs(DATADIR, exist_ok=True)
 os.makedirs(BINDIR, exist_ok=True)
 
-if sys.argv[1] not in ("package", "ls"):
+if sys.argv[1] not in ("export", "ls"):
     plash_call("init")
 
 #####
@@ -151,11 +174,11 @@ elif sys.argv[1] == "punch":
     plash_call("clean")
 
 #####
-# zpkg package
+# zpkg export
 #####
-elif sys.argv[1] == "package":
+elif sys.argv[1] == "export":
     if len(sys.argv) < 3:
-        die("usage: zpkg [--global] package PROGRAM OUTFILE")
+        die("usage: zpkg [-g] export PROGRAM OUTFILE")
     assert_is_installed(sys.argv[2])
     plash_call(
         "sudo",
@@ -167,10 +190,10 @@ elif sys.argv[1] == "package":
         join("lib/zpkg", sys.argv[2])
     )
     print((
-    "Install package locally:\n"
+    "Install export locally:\n"
     "$ tar -xf {0} -C ~/.local \n"
     "\n"
-    "Install package globally:\n"
+    "Install export globally:\n"
     "$ tar -xf {0} -C /usr/local"
     ).format(shlex.quote(sys.argv[3])))
 
