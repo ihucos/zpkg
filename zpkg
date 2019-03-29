@@ -49,7 +49,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 BCHROOT_FILE = join(dir_path, 'bchroot')
 BOOTSTRAP_SCRIPT = join(dir_path, 'bootstrap.sh')
 
-os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] + os.environ.get("PATH").split(":"))
+os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] +
+                              os.environ.get("PATH").split(":"))
 
 if len(sys.argv) > 1 and sys.argv[1] in ('-g', '--global'):
     sys.argv.pop(1)
@@ -60,7 +61,7 @@ else:
     DATADIR = os.path.expanduser("~/.local/lib/zpkg")
     BINDIR = os.path.expanduser("~/.local/bin")
     PLASH_DATA = os.path.expanduser("~/.cache/zpkg")
-os.environ["PLASH_DATA"] =  PLASH_DATA
+os.environ["PLASH_DATA"] = PLASH_DATA
 
 LIST_ALL_CMD = [
     'sh', '-c',
@@ -92,7 +93,7 @@ def plash_call(*args):
 
 def very_magic_guess(newcmds, buildargs):
     if not newcmds:
-        die("no new command found in PATH after build")
+        die("no new command found after build finished")
     if len(newcmds) == 1:
         return list(newcmds)[0]
     for token in buildargs:
@@ -102,12 +103,13 @@ def very_magic_guess(newcmds, buildargs):
         for token in buildargs:
             if token in cmd:
                 return cmd
-    die("unguessable command, call again specifying one of: {}".format(' '.join(newcmds)))
+    die("unguessable command, call again specifying one of: {}".format(
+        ' '.join(newcmds)))
 
 
 def assert_is_installed(pkg):
     if not os.path.exists(join(DATADIR, pkg)):
-        die("package {} is not installed".format(str(pkg)))
+        die("package {} is not installed".format(repr(pkg)))
 
 
 if not len(sys.argv) >= 2:
@@ -139,21 +141,14 @@ if sys.argv[1] == "ls":
 elif sys.argv[1] == "rm":
     if len(sys.argv) < 3:
         die("rm PKG")
-
     assert_is_installed(sys.argv[2])
-    try:
-        shutil.rmtree(os.path.join(DATADIR, sys.argv[2]))
-    except OSError as exc:
-        die("rm {}: {}".format(sys.argv[2], exc))
-    try:
-        os.unlink(join(BINDIR, sys.argv[2]))
-    except FileNotFoundError:
-        pass
     cont = plash_call("map", sys.argv[2])
     if cont:
         plash_call("rm", cont)
         plash_call("clean")
-    info("removed: {}".format(sys.argv[2]))
+
+    plash_call("sudo", "rm", "-rf",
+        join(DATADIR, sys.argv[2]), join(BINDIR, sys.argv[2]))
 
 #####
 # zpkg punch
@@ -169,22 +164,14 @@ elif sys.argv[1] == "package":
     if len(sys.argv) < 4:
         die("usage: zpkg [-g] package PROGRAM OUTFILE")
     assert_is_installed(sys.argv[2])
-    plash_call(
-        "sudo",
-        "tar",
-        "-C",
-        os.path.dirname(BINDIR),
-        "-cf", sys.argv[3],
-        join("bin", sys.argv[2]),
-        join("lib/zpkg", sys.argv[2])
-    )
-    print((
-    "Install package locally:\n"
-    "$ tar -xf {0} -C ~/.local \n"
-    "\n"
-    "Install package globally:\n"
-    "$ tar -xf {0} -C /usr/local"
-    ).format(shlex.quote(sys.argv[3])))
+    plash_call("sudo", "tar", "-C", os.path.dirname(BINDIR), "-cf",
+               sys.argv[3], join("bin", sys.argv[2]),
+               join("lib/zpkg", sys.argv[2]))
+    print(("Install package locally:\n"
+           "$ tar -xf {0} -C ~/.local \n"
+           "\n"
+           "Install package globally:\n"
+           "$ tar -xf {0} -C /usr/local").format(shlex.quote(sys.argv[3])))
 
 #####
 # zpkg add
@@ -205,7 +192,7 @@ elif sys.argv[1] == "add":
     if sys.argv[2] != '?' and os.path.exists(join(DATADIR, sys.argv[2])):
         die("package {} is already installed".format(repr(sys.argv[2])))
 
-    tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp")) # reuse plash's tmp
+    tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
     builded = plash_call("build", "--hash-path", BOOTSTRAP_SCRIPT, "-x",
                          BOOTSTRAP_SCRIPT, "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
@@ -219,12 +206,12 @@ elif sys.argv[1] == "add":
         die("no new binaries found")
     if sys.argv[2] == "?":
         sys.argv[2] = very_magic_guess(new_cmds, sys.argv[3:])
-        info("guessed your program with pure magic: {}".format(sys.argv[2]))
+        info("guessed your command name: {}".format(sys.argv[2]))
     elif sys.argv[2] not in new_cmds:
-        die("program {} not found, but found: {}".format(
-            sys.argv[2], new_cmds))
+        die("command {} not found after build finished, but there is: {}".format(
+            repr(sys.argv[2]), ' '.join(new_cmds)))
     if os.path.exists(join(DATADIR, sys.argv[2])):
-        die("{} already installed".format(sys.argv[2]))
+        die("package {} is already installed".format(repr(sys.argv[2])))
 
     targetdir = join(DATADIR, sys.argv[2])
     launcher = join(BINDIR, sys.argv[2])
@@ -236,9 +223,12 @@ elif sys.argv[1] == "add":
     except FileNotFoundError:
         pass
     os.symlink(join("../lib/zpkg", sys.argv[2], sys.argv[2]), launcher)
-    print()
-    print("installed data     to: {}".format(targetdir))
-    print("installed launcher to: {}".format(launcher))
+
+    home = os.path.expanduser('~')
+    datadir = targetdir.replace(home, '~')
+    launcher = launcher.replace(home, '~')
+    print("zpkg: succesfully installed {} to {}, linked to {}".format(repr(sys.argv[2]), datadir, launcher))
+    #print("linked to: {}".format(launcher))
 
     # map it, so it can be deleted
     plash_call("map", sys.argv[2], builded)
