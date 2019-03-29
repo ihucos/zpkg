@@ -137,6 +137,7 @@ elif sys.argv[1] == "rm":
         cont = plash_call("map", pkg)
         if cont:
             plash_call("rm", cont)
+            plash_call("clean")
         info("removed: {}".format(pkg))
 
 #####
