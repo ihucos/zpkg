@@ -92,7 +92,7 @@ def plash_call(*args):
 
 def very_magic_guess(newcmds, buildargs):
     if not newcmds:
-        die("no new command found")
+        die("no new command found in PATH after build")
     if len(newcmds) == 1:
         return list(newcmds)[0]
     for token in buildargs:
@@ -102,12 +102,12 @@ def very_magic_guess(newcmds, buildargs):
         for token in buildargs:
             if token in cmd:
                 return cmd
-    die("unguessable program, choose yourself: {}".format(' '.join(newcmds)))
+    die("unguessable command, call again specifying one of: {}".format(' '.join(newcmds)))
 
 
 def assert_is_installed(pkg):
     if not os.path.exists(join(DATADIR, pkg)):
-        die("{} is not installed".format(pkg))
+        die("package {} is not installed".format(str(pkg)))
 
 
 if not len(sys.argv) >= 2:
