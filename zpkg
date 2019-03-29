@@ -22,7 +22,7 @@ Some Build Arguments:
     --layer, -l
         adds a layer for build caching
     --from-github
-        build according to instruction at github project
+        build according to instructions at GitHub project
     --apt, --apk, --apt, --defpm, --dnf, --emerge, --npm, --pacman, --pip,
     --pip3, --yum
         Invokes the given tool with it's primary action
