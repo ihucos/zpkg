@@ -31,8 +31,11 @@ Example:
 import sys, os, subprocess, shutil, tempfile, shlex
 from os.path import join
 
-BCHROOT_FILE = os.path.expanduser("~/mypkg/bchroot")
-BOOTSTRAP_SCRIPT = os.path.expanduser("~/mypkg/bootstrap.sh")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+BCHROOT_FILE = join(dir_path, 'bchroot')
+BOOTSTRAP_SCRIPT = join(dir_path, 'bootstrap.sh')
+
+os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] + os.environ.get("PATH").split(":"))
 
 if len(sys.argv) > 1 and sys.argv[1] == '--global':
     sys.argv.pop(1)
