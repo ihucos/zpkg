@@ -73,7 +73,7 @@ Sweet kittens are washed and dried with unicorn powder. Some glitter is added, b
 I'ts basically a small wrapper around [plash](https://github.com/ihucos/plash)
 
 ## Why?
-There are too many package managers, so I wrote another one. And I want to get more self-righteous comments on hacker news
+There are too many package managers, so I wrote another one. I also want to see discussions on hacker news about proper READMEs.
 
 ## Is this a serious project?
 Dead serious.
