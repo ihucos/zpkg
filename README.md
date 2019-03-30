@@ -7,7 +7,7 @@ Is a meta package manager. Use any package manager in any Linux distribution.
 
 ```
 $ curl --fail --location https://raw.githubusercontent.com/ihucos/zpkg/master/install.sh | sh
-$ sudo apt install python3 unionfs-fuse # you need python3 and unionfs-fuse
+$ sudo apt install unionfs-fuse # you need python3 and unionfs-fuse
 ```
 
 
