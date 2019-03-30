@@ -54,5 +54,8 @@ EXAMPLE
 ```
 
 
-## Why does it work
+## How does it work
+yadda yadda
+
+## Limitations
 yadda yadda
