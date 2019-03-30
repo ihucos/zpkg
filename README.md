@@ -4,17 +4,9 @@ Is a meta package manager. Use any package manager in any Linux distribution.
 
 
 ### Install
-
 ```
 $ curl --fail --location https://raw.githubusercontent.com/ihucos/zpkg/master/install.sh | sh
 $ sudo apt install unionfs-fuse # you need python3 and unionfs-fuse
-```
-
-
-### Example
-```
-$ zpkg add -A libreoffice
-$ libreoffice
 ```
 
 ### Usage
@@ -31,21 +23,21 @@ SUBCOMMANDS
 
 ARGUMENTS
     --global, -g
-        Affects the system globally
+        affects the system globally
 
 BUILD ARGUMENTS
     --from, -f
         choose a base image
-    --from-url
-        use a tar file over http as base image
     --run, -x
         run any shell (/bin/sh) command
     --layer, -l
         adds a layer for build caching
     --from-github
         build according to instructions at GitHub project
-    --apt, --apk, --apt, --dnf, --emerge, --npm, --pacman, --pip, --pip3, --yum
+    --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
+    --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action
+
     -A  same as `--from alpine --apk`
     -C  same as `--from centos --yum`
     -D  same as `--from debian --apt`
