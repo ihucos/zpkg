@@ -2,8 +2,13 @@
 
 set -eu
 
-HOME=~
-INSTALL_TO="$HOME/.local"
+if [ -z ${1+x} ]; then
+  HOME=~
+  INSTALL_TO="$HOME/.local"
+else
+  INSTALL_TO="$1"
+fi
+
 tmp=$(mktemp -d)
 mkdir -p "$tmp/bin" "$tmp/lib/zpkg"
 curl -Lf'#' https://github.com/ihucos/plash/archive/master.tar.gz | tar -xzC          $tmp/lib/zpkg plash-master/opt/plash --strip-components=2
