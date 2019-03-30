@@ -2,12 +2,7 @@
 
 set -eu
 
-if [ -z ${1+x} ]; then
-  HOME=~
-  INSTALL_TO="$HOME/.local"
-else
-  INSTALL_TO="$1"
-fi
+INSTALL_TO="$1"
 
 tmp=$(mktemp -d)
 mkdir -p "$tmp/bin" "$tmp/lib/zpkg"

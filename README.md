@@ -5,7 +5,7 @@ With zpkg you can install and use programs from other distributions
 
 ## Installation
 ```
-$ curl --fail --location https://raw.githubusercontent.com/ihucos/zpkg/master/install.sh | sh
+curl -fL https://raw.githubusercontent.com/ihucos/zpkg/master/install.sh | sh -s ~/.local/  # or /usr/local
 $ sudo apt install unionfs-fuse # you need python3 and unionfs-fuse
 ```
 
