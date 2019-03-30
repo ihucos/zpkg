@@ -52,11 +52,28 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf
 ```
-## Why?
-There are too many package managers, so I wrote another one.
 
-## How does it work
-Sweet kittens are washed and dried with unicorn powder. Some glitter is added, but it should not reach a state of too much. Furthermore dolpins are asked for their magical wisdom and that input is fitted into the the food the kitten would usually eat. But it's actually only used to make them hungry and then you eat it yourself. By doing so you can get superpowers for exactly 10 seconds. So this procedure has to be repeated several times, many unicorns had to die.
+## Use cases
+Using applications from other distributions
+Installing applications with unprivileged users
+Distribute applications (zpkg package)
+Deploy applications (zpkg package)
+Having distribution independent application in your home folder (e.G. for a USB stick)
 
 ## Limitations
-It is unfailable. I rememeber some assumption that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root filesystem on a per package basis. Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python cause undefined behaviour. Libre Office, Firefox, Gimp or pylint work fine.
+It is unfailable. I remember some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis (jaja, I know, I know, blah, blah, blah just trust me). Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python may not work as desired. Libre Office, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
+
+How stable?
+Beta
+
+## How does it work
+Sweet kittens are washed and dried with unicorn powder. Some glitter is added, but it should not reach a state of too much. Furthermore dolphins are asked for their magical wisdom and that input is fitted into the food the kitten would usually eat. But it's actually only used to make them hungry and then you eat it yourself. By doing so you can get superpowers for exactly 10 seconds. So this procedure has to be repeated several times, many unicorns had to die.
+
+## How dos it work (again)
+I'ts basically a small wrapper around [plash](https://github.com/ihucos/plash)
+
+## Why?
+There are too many package managers, so I wrote another one. And I want to get more self-righteous comments on hacker news
+
+## Is this a serious project?
+Dead serious.
