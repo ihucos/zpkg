@@ -19,20 +19,21 @@ $ libreoffice
 
 ### Usage
 ```
-usage: zpkg [-g] {add,package,ls,clear,rm} ...
+USAGE
+    zpkg [-g] {add,package,ls,clear,rm} ...
 
-Subcommands:
-    add [PKG] BUILD-ARGS   Builds and adds a package
-    clear                  Clean build cache
-    ls                     Lists all installed packages
-    package PKG FILE       Creates an installabe package
-    rm PKG                 Uninstalls the given package
+SUBCOMMANDS
+    add [PKG] BUILD-ARGS   builds and adds a package
+    clear                  clean build cache
+    ls                     lists all installed packages
+    package PKG FILE       creates an installabe package
+    rm PKG                 uninstalls the given package
 
-Global Arguments:
+ARGUMENTS
     --global, -g
         Affects the system globally
 
-Some Build Arguments:
+BUILD ARGUMENTS
     --from, -f
         choose a base image
     --from-url
@@ -42,9 +43,8 @@ Some Build Arguments:
     --layer, -l
         adds a layer for build caching
     --from-github
-        build according to instruction at github project
-    --apt, --apk, --apt, --defpm, --dnf, --emerge, --npm, --pacman, --pip,
-    --pip3, --yum
+        build according to instructions at GitHub project
+    --apt, --apk, --apt, --dnf, --emerge, --npm, --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action
     -A  same as `--from alpine --apk`
     -C  same as `--from centos --yum`
@@ -53,4 +53,10 @@ Some Build Arguments:
     -G  same as `--from gentoo --emerge`
     -R  same as `--from archlinux --pacman`
     -U  same as `--from ubuntu --apt`
+
+EXAMPLE
+    zpkg add xeyes -U x11-apps
+    zpkg add -A gimp
+    zpkg add -A py3-pip --pip3 yapf
+    zpkg rm yapf
 ```
