@@ -54,11 +54,11 @@ EXAMPLE
 ```
 
 ## Use cases
-Using applications from other distributions
-Installing applications with unprivileged users
-Distribute applications (zpkg package)
-Deploy applications (zpkg package)
-Having distribution independent application in your home folder (e.G. for a USB stick)
+* Using applications from other distributions
+* Installing applications with unprivileged users
+* Distribute applications (zpkg package)
+* Deploy applications (zpkg package)
+* Having distribution independent application in your home folder (e.G. for a USB stick)
 
 ## Limitations
 It is unfailable. I remember some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis (jaja, I know, I know, blah, blah, blah just trust me). Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python may not work as desired. Libre Office, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
