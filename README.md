@@ -53,13 +53,4 @@ Some Build Arguments:
     -G  same as `--from gentoo --emerge`
     -R  same as `--from archlinux --pacman`
     -U  same as `--from ubuntu --apt`
-
-Example:
-    $ zpkg add xeyes -U x11-apps
-    $ zpkg add -A gimp # implicit command name
-    $ zpkg ls
-    gimp
-    xeyes
-    $ zpkg rm xeyes
-    $ gimp
 ```
