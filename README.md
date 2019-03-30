@@ -57,6 +57,9 @@ EXAMPLE
 * [bchroot](https://github.com/ihucos/bchroot) - chroot like tool
 * [plash](https://github.com/ihucos/plash) - Containerization tool
 
+## Why?
+There are too many package managers, so I wrote another one.
+
 ## How does it work
 yadda yadda
 
