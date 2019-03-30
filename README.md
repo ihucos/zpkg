@@ -1,6 +1,6 @@
 
 # zpkg
-Is a meta package manager. Use any package manager in any Linux distribution.
+With zpkg you can install and use programs from other distributions
 
 
 ## Installation
