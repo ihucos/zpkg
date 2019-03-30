@@ -6,7 +6,7 @@ SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
     clear                  clean build cache
     ls                     lists all installed packages
-    package PKG FILE       creates an installabe package
+    package PKG FILE       creates an universal package
     rm PKG                 uninstalls the given package
 
 ARGUMENTS

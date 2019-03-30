@@ -18,7 +18,7 @@ SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
     clear                  clean build cache
     ls                     lists all installed packages
-    package PKG FILE       creates an installabe package
+    package PKG FILE       creates an universal package
     rm PKG                 uninstalls the given package
 
 ARGUMENTS
@@ -59,4 +59,4 @@ There are too many package managers, so I wrote another one.
 Sweet kittens are washed and dried with unicorn powder. Some glitter is added, but it should not reach a state of too much. Furthermore dolpins are asked for their magical wisdom and that input is fitted into the the food the kitten would usually eat. But it's actually only used to make them hungry and then you eat it yourself. By doing so you can get superpowers for exactly 10 seconds. So this procedure has to be repeated several times, many unicorns had to die.
 
 ## Limitations
-It is unfailable. I rememeber some assumption that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root filesystem. Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Libre Office, Firefox, Gimp or pylint work fine. Bash, synaptic, apt, gnome-tweak-tool or python may not work as expected.
+It is unfailable. I rememeber some assumption that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root filesystem on a per package basis. Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python cause undefined behaviour. Libre Office, Firefox, Gimp or pylint work fine.
