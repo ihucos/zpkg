@@ -3,13 +3,13 @@
 Is a meta package manager. Use any package manager in any Linux distribution.
 
 
-### Install
+## Installation
 ```
 $ curl --fail --location https://raw.githubusercontent.com/ihucos/zpkg/master/install.sh | sh
 $ sudo apt install unionfs-fuse # you need python3 and unionfs-fuse
 ```
 
-### Usage
+## Usage
 ```
 USAGE
     zpkg [-g] {add,package,ls,clear,rm} ...
@@ -52,3 +52,7 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf
 ```
+
+
+## Why does it work
+yadda yadda
