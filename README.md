@@ -52,7 +52,10 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf
 ```
+## Built With
 
+* [bchroot](https://github.com/ihucos/bchroot) - chroot like tool
+* [plash](https://github.com/ihucos/plash) - Containerization tool
 
 ## How does it work
 yadda yadda
