@@ -25,7 +25,6 @@ BUILD ARGUMENTS
     --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
     --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action
-
     -A  same as `--from alpine --apk`
     -C  same as `--from centos --yum`
     -D  same as `--from debian --apt`
