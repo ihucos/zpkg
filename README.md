@@ -61,22 +61,16 @@ EXAMPLE
 * Having distribution independent application in your home folder (e.G. for a USB stick)
 
 ## Limitations
-It is unfailable. I remember some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis (jaja, I know, I know, blah, blah, blah just trust me). Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
+There is some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis (jaja, I know, I know, blah, blah, blah just trust me). Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
 
 ## How stable?
 Beta
 
-## How does it work
-Sweet kittens are washed and dried with unicorn powder. Some glitter is added, but it should not reach a state of too much. Furthermore dolphins are asked for their magical wisdom and that input is fitted into the food the kitten would usually eat. But it's actually only used to make them hungry and then you eat it yourself. By doing so you can get superpowers for exactly 10 seconds. So this procedure has to be repeated several times, many unicorns had to die.
-
-## How dos it work (again)
-I'ts basically a small wrapper around [plash](https://github.com/ihucos/plash)
+## How dos it work
+The heavy lifting is done by [plash](https://github.com/ihucos/plash)
 
 ## Installing Ubuntu/Debian packages is not working
 `Apt` needs setuid/setgid support. For this to work for unprivileged users, you need to install newuidmap/newguidmap (possibly a package named `uidmap`). And have `/etc/subuid` and `/etc/subgid` with some subuids and subgids for your user (already there on Ubuntu)
 
 ## Why?
-There are too many package managers, so I wrote another one. I also want to see discussions on hacker news about proper READMEs.
-
-## Is this a serious project?
-Dead serious.
+There are too many package managers, so I wrote another one.
