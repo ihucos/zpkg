@@ -69,7 +69,7 @@ Beta
 The heavy lifting is done by [plash](https://github.com/ihucos/plash).
 
 ## Installing Ubuntu/Debian packages is not working
-`Apt` needs setuid/setgid support. For this to work for unprivileged users, you need to install newuidmap/newguidmap (possibly a package named `uidmap`). And have `/etc/subuid` and `/etc/subgid` with some subuids and subgids for your user (already there on Ubuntu)
+`apt` needs setuid/setgid support. For this to work for unprivileged users, you need to install newuidmap/newguidmap (possibly a package named `uidmap`). And have `/etc/subuid` and `/etc/subgid` with some subuids and subgids for your user (already there on Ubuntu)
 
 ## Why?
 There are too many package managers, so I wrote another one.
