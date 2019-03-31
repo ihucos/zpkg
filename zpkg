@@ -45,7 +45,7 @@ from os.path import join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 BCHROOT_FILE = join(dir_path, 'bchroot')
-BOOTSTRAP_SCRIPT = join(dir_path, 'bootstrap.sh')
+BOOTSTRAP_SCRIPT = open(join(dir_path, 'bootstrap.sh')).read()
 
 os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] +
                               os.environ.get("PATH").split(":"))
@@ -187,8 +187,7 @@ elif sys.argv[1] == "add":
         die("package {} is already installed".format(repr(sys.argv[2])))
 
     tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
-    builded = plash_call("build", "--hash-path", BOOTSTRAP_SCRIPT, "-x",
-                         BOOTSTRAP_SCRIPT, "--layer", *sys.argv[2:])
+    builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer", "--run", "", "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
     os.chmod(join(tmpdir, "rootfs"), 0o755)
     parent = plash_call("parent", builded)
@@ -197,7 +196,7 @@ elif sys.argv[1] == "add":
     new_cmds = sorted([os.path.basename(i) for i in (after_cmds - orig_cmds)])
 
     if not new_cmds:
-        die("no new binaries found")
+        die("no new commands found")
     if sys.argv[2] == "?":
         sys.argv[2] = very_magic_guess(new_cmds, sys.argv[3:])
         info("guessed your command name: {}".format(sys.argv[2]))
