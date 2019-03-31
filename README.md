@@ -72,6 +72,9 @@ Sweet kittens are washed and dried with unicorn powder. Some glitter is added, b
 ## How dos it work (again)
 I'ts basically a small wrapper around [plash](https://github.com/ihucos/plash)
 
+## Installing Ubuntu/Debian packages is not working
+`Apt` needs setuid/setgid support. For this to work for unprivileged users, you need to install newuidmap/newguidmap (possibly a package named `uidmap`). And have `/etc/subuid` and `/etc/subgid` with some subuids and subgids for your user (already there on Ubuntu)
+
 ## Why?
 There are too many package managers, so I wrote another one. I also want to see discussions on hacker news about proper READMEs.
 
