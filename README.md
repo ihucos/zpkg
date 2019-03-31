@@ -74,3 +74,6 @@ The heavy lifting is done by [plash](https://github.com/ihucos/plash)
 
 ## Why?
 There are too many package managers, so I wrote another one.
+
+## Enjoy
+![jumping man](https://user-images.githubusercontent.com/2066372/55283225-018fb980-5356-11e9-895e-f65965f5ccbd.jpg)
