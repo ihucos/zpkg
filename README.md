@@ -61,13 +61,13 @@ EXAMPLE
 * Having distribution independent application in your home folder (e.G. for a USB stick)
 
 ## Limitations
-There is some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis. Note that something like "System Programs" may not work. As an example: Bash, synaptic, apt, or gnome-tweak-tool may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
+There is the assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to an unified root file system on a per package basis. Note that something like "System Programs" may not work. As an example: Bash, synaptic, apt, or gnome-tweak-tool may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
 
 ## How stable?
 Beta
 
 ## How dos it work
-The heavy lifting is done by [plash](https://github.com/ihucos/plash)
+The heavy lifting is done by [plash](https://github.com/ihucos/plash).
 
 ## Installing Ubuntu/Debian packages is not working
 `Apt` needs setuid/setgid support. For this to work for unprivileged users, you need to install newuidmap/newguidmap (possibly a package named `uidmap`). And have `/etc/subuid` and `/etc/subgid` with some subuids and subgids for your user (already there on Ubuntu)
