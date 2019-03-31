@@ -61,7 +61,7 @@ EXAMPLE
 * Having distribution independent application in your home folder (e.G. for a USB stick)
 
 ## Limitations
-There is some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis (jaja, I know, I know, blah, blah, blah just trust me). Note that this whole thing is useful for programs that alter state in you home directory, the pixels in you screen or stuff with internet data. Something like "System Programs" may not work. As an example: Bash, synaptic, apt, gnome-tweak-tool or python may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
+There is some assumption, that installed packages should not change files that existed before they where installed, because of hard linking layers to a unified root file system on a per package basis. Note that something like "System Programs" may not work. As an example: Bash, synaptic, apt, or gnome-tweak-tool may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine. So this is mainly for something like end user programs.
 
 ## How stable?
 Beta
@@ -74,3 +74,5 @@ The heavy lifting is done by [plash](https://github.com/ihucos/plash)
 
 ## Why?
 There are too many package managers, so I wrote another one.
+
+
