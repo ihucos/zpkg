@@ -39,7 +39,7 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf"""
 
-import sys, os, subprocess, shutil, tempfile, shlex
+import sys, os, subprocess, shutil, tempfile, shlex, shutil
 from os.path import join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -157,7 +157,7 @@ elif sys.argv[1] == "package":
     if len(sys.argv) < 4:
         die("usage: zpkg [-g] package PROGRAM OUTFILE")
     assert_is_installed(sys.argv[2])
-    plash_call("sudo", "tar", "-C", os.path.dirname(BINDIR), "-cf",
+    plash_call("sudo", "tar", "-C", os.path.dirname(BINDIR), "-cJf",
                sys.argv[3], join("bin", sys.argv[2]),
                join("lib/zpkg", sys.argv[2]))
     print(("Install package locally:\n"
@@ -207,7 +207,7 @@ elif sys.argv[1] == "add":
 
     targetdir = join(DATADIR, sys.argv[2])
     launcher = join(BINDIR, sys.argv[2])
-    os.link(BCHROOT_FILE, join(tmpdir, sys.argv[2]))
+    shutil.copy2(BCHROOT_FILE, join(tmpdir, sys.argv[2]))
     os.rename(tmpdir, targetdir)
     os.chmod(targetdir, 0o755)
     try:
