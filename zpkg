@@ -58,6 +58,16 @@ else:
     DATADIR = os.path.expanduser("~/.local/lib/zpkg")
     BINDIR = os.path.expanduser("~/.local/bin")
     PLASH_DATA = os.path.expanduser("~/.cache/zpkg")
+
+zpkg_install_dir = os.environ.get("ZPKG_INSTALL_DIR")
+if zpkg_install_dir:
+    DATADIR = os.path.expanduser(join(zpkg_install_dir, "lib/zpkg"))
+    BINDIR = os.path.expanduser(join(zpkg_install_dir, "bin"))
+
+zpkg_cache_dir = os.environ.get("ZPKG_CACHE_DIR")
+if zpkg_cache_dir:
+    PLASH_DATA = zpkg_cache_dir
+
 os.environ["PLASH_DATA"] = PLASH_DATA
 
 LIST_ALL_CMD = [

@@ -27,6 +27,7 @@ chmod +x /usr/local/bin/bchroot
 /usr/local/bin/zpkg
 --write-script
 /usr/local/bin/zpkg
+#!/bin/sh
 export PLASH_INIT_UNION_TASTE=fuse-overlayfs
 exec origzpkg "$@"
 
