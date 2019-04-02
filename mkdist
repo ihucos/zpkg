@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eux
+
+cd distribute
+rm -rf build
+./build_fuse_overlayfs
+./download_bchroot
+./build_zpkg_zpkg
+mkdir -p ../dist
+cp build/zpkg.zpkg ../dist
