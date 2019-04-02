@@ -1,3 +1,4 @@
 #!/bin/sh
+mkdir -p build
 curl -Lf https://github.com/ihucos/bchroot/releases/download/0.3/bchroot > build/bchroot
 chmod +x build/bchroot

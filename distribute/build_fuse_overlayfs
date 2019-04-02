@@ -27,4 +27,5 @@ git clone https://github.com/containers/fuse-overlayfs && \
 --layer
 
 --entrypoint-script
+mkdir -p build
 exec cp /usr/bin/fuse-overlayfs build/fuse-overlayfs
