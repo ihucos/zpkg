@@ -229,7 +229,7 @@ elif sys.argv[1] == "add":
     home = os.path.expanduser('~')
     datadir = targetdir.replace(home, '~')
     launcher = launcher.replace(home, '~')
-    print("zpkg: succesfully installed {} to {}, linked to {}".format(
+    print("zpkg: success: installed {} to {}, linked to {}".format(
         repr(sys.argv[2]), datadir, launcher))
     #print("linked to: {}".format(launcher))
 
