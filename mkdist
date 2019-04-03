@@ -1,10 +1,8 @@
 #!/bin/sh
 set -eux
 
-cd distribute
-rm -rf build
-./build_fuse_overlayfs
-./download_bchroot
-./build_zpkg_zpkg
-mkdir -p ../dist
-cp build/zpkg.zpkg ../dist
+export ZPKG_INSTALL_DIR=$(mktemp -d)
+
+./zpkg add zpkg --eval-file plashfile
+mkdir -p dist
+./zpkg package zpkg dist/zpkg.zpkg

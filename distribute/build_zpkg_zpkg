@@ -1,8 +1,0 @@
-#!/bin/sh
-
-set -eux
-mkdir -p build
-export ZPKG_INSTALL_DIR="$(mktemp -d)"
-../zpkg ls
-../zpkg add zpkg --eval-file plashfile
-../zpkg package zpkg ./build/zpkg.zpkg
