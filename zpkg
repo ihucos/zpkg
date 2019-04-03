@@ -110,6 +110,11 @@ def very_magic_guess(newcmds, buildargs):
         for token in buildargs:
             if token in cmd:
                 return cmd
+    for cmd in sorted(newcmds, key=len):
+        for token in reversed(buildargs):
+            if len(cmd) >= 4 and cmd in token:
+                return cmd
+
     die("unguessable command, call again specifying one of: {}".format(
         ' '.join(newcmds)))
 
@@ -196,7 +201,8 @@ elif sys.argv[1] == "add":
         die("package {} is already installed".format(repr(sys.argv[2])))
 
     tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
-    builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer", "--run", "", "--layer", *sys.argv[2:])
+    builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer",
+                         "--run", "", "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
     os.chmod(join(tmpdir, "rootfs"), 0o755)
     nodepath = plash_call("nodepath", builded)
