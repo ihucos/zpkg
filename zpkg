@@ -199,8 +199,9 @@ elif sys.argv[1] == "add":
     builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer", "--run", "", "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
     os.chmod(join(tmpdir, "rootfs"), 0o755)
-    parent = plash_call("parent", builded)
-    orig_cmds = set(plash_call('run', parent, *LIST_ALL_CMD).splitlines())
+    nodepath = plash_call("nodepath", builded)
+    base = nodepath.split("/layer/")[1].split("/")[1]
+    orig_cmds = set(plash_call('run', base, *LIST_ALL_CMD).splitlines())
     after_cmds = set(plash_call('run', builded, *LIST_ALL_CMD).splitlines())
     new_cmds = sorted([os.path.basename(i) for i in (after_cmds - orig_cmds)])
 
