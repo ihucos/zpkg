@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """USAGE
     zpkg [-g] {add,package,ls,clear,rm} ...
 
@@ -124,13 +123,15 @@ def very_magic_guess(newcmds, buildargs):
 
 def swap_paths(dir1, dir2):
     AT_FDCWD = -100
-    SYS_renameat2 = 316 # 353 for 32 bit!!
+    SYS_renameat2 = 316  # 353 for 32 bit!!
     RENAME_EXCHANGE = (1 << 1)
     libc = ctypes.CDLL(None, use_errno=True)
-    err = libc.syscall(SYS_renameat2, AT_FDCWD, ctypes.c_char_p(dir1), AT_FDCWD, ctypes.c_char_p(dir2), RENAME_EXCHANGE)
+    err = libc.syscall(SYS_renameat2, AT_FDCWD, ctypes.c_char_p(dir1),
+                       AT_FDCWD, ctypes.c_char_p(dir2), RENAME_EXCHANGE)
     if err:
         errstr = errno.errorcode[ctypes.get_errno()]
-        die("could not renameat2 with RENAME_EXCHANGE: {} -> {} ({})".format(dir1.decode(), dir2.decode(), errstr))
+        die("could not renameat2 with RENAME_EXCHANGE: {} -> {} ({})".format(
+            dir1.decode(), dir2.decode(), errstr))
 
 
 def assert_is_installed(pkg):
@@ -142,7 +143,9 @@ if not len(sys.argv) >= 2:
     usage()
 elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
-elif not sys.argv[1] in ["add", "ls", "freeze", "upgrade", "rm", "clear", "package"]:
+elif not sys.argv[1] in [
+        "add", "ls", "freeze", "upgrade", "rm", "clear", "package"
+]:
     die("no such subcommand, try --help")
 
 os.makedirs(DATADIR, exist_ok=True)
@@ -190,10 +193,13 @@ elif sys.argv[1] == "upgrade":
             with open(join(DATADIR, pkg, 'buildargs')) as f:
                 build_args = shlex.split(f.read())
         except FileNotFoundError:
-            print("zpkg upgrade: {}: no upgrade instructions".format(pkg), file=sys.stderr)
+            print(
+                "zpkg upgrade: {}: no upgrade instructions".format(pkg),
+                file=sys.stderr)
             continue
 
-        tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
+        tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA,
+                                           "tmp"))  # reuse plash's tmp
 
         cont = plash_call("map", pkg)
         if cont:
@@ -208,7 +214,6 @@ elif sys.argv[1] == "upgrade":
         swap_paths(tmpdir.encode(), join(DATADIR, pkg, 'rootfs').encode())
         plash_call("map", pkg, builded)
         print("zpkg upgrade: {}: done".format(pkg), file=sys.stderr)
-
 
 #####
 # zpkg rm
