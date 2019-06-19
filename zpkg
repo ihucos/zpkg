@@ -41,7 +41,7 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf"""
 
-import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime, ctypes, errno
+import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime
 from os.path import join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -122,8 +122,12 @@ def very_magic_guess(newcmds, buildargs):
 
 
 def swap_paths(dir1, dir2):
+    import ctypes, errno, platform
     AT_FDCWD = -100
-    SYS_renameat2 = 316  # 353 for 32 bit!!
+    if platform.architecture()[0] == '32bit':
+        SYS_renameat2 = 353
+    else:
+        SYS_renameat2 = 316
     RENAME_EXCHANGE = (1 << 1)
     libc = ctypes.CDLL(None, use_errno=True)
     err = libc.syscall(SYS_renameat2, AT_FDCWD, ctypes.c_char_p(dir1),
