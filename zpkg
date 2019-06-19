@@ -130,7 +130,7 @@ def swap_paths(dir1, dir2):
     err = libc.syscall(SYS_renameat2, AT_FDCWD, ctypes.c_char_p(dir1), AT_FDCWD, ctypes.c_char_p(dir2), RENAME_EXCHANGE)
     if err:
         errstr = errno.errorcode[ctypes.get_errno()]
-        die("could not call renameat2 with RENAME_EXCHANGE: {}".format(errstr))
+        die("could not renameat2 with RENAME_EXCHANGE: {} -> {} ({})".format(dir1.decode(), dir2.decode(), errstr))
 
 
 def assert_is_installed(pkg):
@@ -190,7 +190,7 @@ elif sys.argv[1] == "upgrade":
             with open(join(DATADIR, pkg, 'buildargs')) as f:
                 build_args = shlex.split(f.read())
         except FileNotFoundError:
-            print("zpkg upgrade: no upgrade instruction for package {}".format(repr(pkg)), file=sys.stderr)
+            print("zpkg upgrade: {}: no upgrade instructions".format(pkg), file=sys.stderr)
             continue
 
         tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
@@ -200,14 +200,14 @@ elif sys.argv[1] == "upgrade":
             plash_call("rm", cont)
             plash_call("clean")
 
-        print("zpkg upgrade: upgrading {}...".format(repr(pkg)), file=sys.stderr)
+        print("zpkg upgrade: {}: building...".format(pkg), file=sys.stderr)
 
         builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer",
                              "--run", "", "--layer", *build_args)
         plash_call("shallow-copy", builded, tmpdir)
         swap_paths(tmpdir.encode(), join(DATADIR, pkg, 'rootfs').encode())
         plash_call("map", pkg, builded)
-        print("zpkg upgrade: upgraded {}".format(repr(pkg)), file=sys.stderr)
+        print("zpkg upgrade: {}: done".format(pkg), file=sys.stderr)
 
 
 #####
