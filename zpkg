@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
+
 """USAGE
     zpkg [-g] {add,package,ls,clear,rm} ...
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
+    upgrade [PKG1,PKG2...] upgrade given or all packages
     clear                  clean build cache
+    freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
     rm PKG                 uninstalls the given package
@@ -39,7 +42,7 @@ EXAMPLE
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf"""
 
-import sys, os, subprocess, shutil, tempfile, shlex, shutil
+import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime, ctypes, errno
 from os.path import join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -119,6 +122,17 @@ def very_magic_guess(newcmds, buildargs):
         ' '.join(newcmds)))
 
 
+def swap_paths(dir1, dir2):
+    AT_FDCWD = -100
+    SYS_renameat2 = 316 # 353 for 32 bit!!
+    RENAME_EXCHANGE = (1 << 1)
+    libc = ctypes.CDLL(None, use_errno=True)
+    err = libc.syscall(SYS_renameat2, AT_FDCWD, ctypes.c_char_p(dir1), AT_FDCWD, ctypes.c_char_p(dir2), RENAME_EXCHANGE)
+    if err:
+        errstr = errno.errorcode[ctypes.get_errno()]
+        die("could not call renameat2 with RENAME_EXCHANGE: {}".format(errstr))
+
+
 def assert_is_installed(pkg):
     if not os.path.exists(join(DATADIR, pkg)):
         die("package {} is not installed".format(repr(pkg)))
@@ -126,9 +140,9 @@ def assert_is_installed(pkg):
 
 if not len(sys.argv) >= 2:
     usage()
-elif sys.argv[1] in ["-h", "--help"]:
+elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
-elif not sys.argv[1] in ["add", "ls", "rm", "clear", "package"]:
+elif not sys.argv[1] in ["add", "ls", "freeze", "upgrade", "rm", "clear", "package"]:
     die("no such subcommand, try --help")
 
 os.makedirs(DATADIR, exist_ok=True)
@@ -143,6 +157,58 @@ if sys.argv[1] not in ("package", "ls"):
 if sys.argv[1] == "ls":
     for pkg in os.listdir(DATADIR):
         print(pkg)
+
+#####
+# zpkg freeze
+#####
+elif sys.argv[1] == "freeze":
+    for pkg in os.listdir(DATADIR):
+        try:
+            with open(join(DATADIR, pkg, 'buildargs')) as f:
+                args = f.read()
+        except FileNotFoundError:
+            continue
+        print('zpkg add {} {}'.format(pkg, args))
+
+#####
+# zpkg upgrade
+#####
+elif sys.argv[1] == "upgrade":
+
+    upgrade_packages = sys.argv[2:]
+    if not upgrade_packages:
+        upgrade_packages = os.listdir(DATADIR)
+
+    #plash_call('purge', '--yes')
+    #plash_call('init')
+
+    for pkg in upgrade_packages:
+        if not os.path.exists(join(DATADIR, pkg)):
+            die("package {} is not installed".format(repr(pkg)))
+
+        try:
+            with open(join(DATADIR, pkg, 'buildargs')) as f:
+                build_args = shlex.split(f.read())
+        except FileNotFoundError:
+            print("zpkg upgrade: no upgrade instruction for package {}".format(repr(pkg)), file=sys.stderr)
+            continue
+
+        tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))  # reuse plash's tmp
+
+        cont = plash_call("map", pkg)
+        if cont:
+            plash_call("rm", cont)
+            plash_call("clean")
+
+        print("zpkg upgrade: upgrading {}...".format(repr(pkg)), file=sys.stderr)
+
+        builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer",
+                             "--run", "", "--layer", *build_args)
+        plash_call("shallow-copy", builded, tmpdir)
+        swap_paths(tmpdir.encode(), join(DATADIR, pkg, 'rootfs').encode())
+        plash_call("map", pkg, builded)
+        print("zpkg upgrade: upgraded {}".format(repr(pkg)), file=sys.stderr)
+
 
 #####
 # zpkg rm
@@ -221,6 +287,9 @@ elif sys.argv[1] == "add":
             format(repr(sys.argv[2]), ' '.join(new_cmds)))
     if os.path.exists(join(DATADIR, sys.argv[2])):
         die("package {} is already installed".format(repr(sys.argv[2])))
+
+    with open(join(tmpdir, 'buildargs'), 'w') as f:
+        f.write(' '.join(shlex.quote(i) for i in sys.argv[3:]))
 
     targetdir = join(DATADIR, sys.argv[2])
     launcher = join(BINDIR, sys.argv[2])
