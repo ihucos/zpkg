@@ -4,12 +4,13 @@
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
-    upgrade [PKG1,PKG2...] upgrade given or all packages
-    clear                  clean build cache
+    clear                  clear build cache
+    du                     show disk usage
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
     rm PKG                 uninstalls the given package
+    upgrade [PKG1,PKG2...] upgrade given or all packages
 
 ARGUMENTS
     --global, -g
@@ -148,7 +149,7 @@ if not len(sys.argv) >= 2:
 elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
 elif not sys.argv[1] in [
-        "add", "ls", "freeze", "upgrade", "rm", "clear", "package"
+        "add", "ls", "freeze", "upgrade", "rm", "clear", "package", "du"
 ]:
     die("no such subcommand, try --help")
 
@@ -164,6 +165,12 @@ if sys.argv[1] not in ("package", "ls"):
 if sys.argv[1] == "ls":
     for pkg in os.listdir(DATADIR):
         print(pkg)
+
+#####
+# zpkg du
+#####
+if sys.argv[1] == "du":
+    os.execlp("plash", "plash", "sudo", "du", "-sh", DATADIR, PLASH_DATA)
 
 #####
 # zpkg freeze
