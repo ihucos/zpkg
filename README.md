@@ -5,8 +5,8 @@ With zpkg you can install and use programs from other distributions
 
 ## Install
 ```
-$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.1/zpkg.zpkg | tar -xJf - -C ~/.local   # user
-$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.1/zpkg.zpkg | tar -xJf - -C /usr/local # global
+$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local   # user
+$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C /usr/local # global
 ```
 
 ## Usage
