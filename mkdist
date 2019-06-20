@@ -3,6 +3,6 @@ set -eux
 
 export ZPKG_INSTALL_DIR=$(mktemp -d)
 
-./zpkg add zpkg --eval-github plashfile
+./zpkg add zpkg --eval-file plashfile
 mkdir -p dist
 ./zpkg package zpkg dist/zpkg.zpkg

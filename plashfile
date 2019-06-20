@@ -1,12 +1,8 @@
 --from
 alpine
 
---inline
-apk add --no-cache
-curl
-gnupg
-python3
-xz
+--run
+apk add --no-cache curl gnupg python3 xz
 
 --layer
 --run
