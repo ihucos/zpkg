@@ -147,9 +147,15 @@ orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem 
     <h2>
       More examples
     </h2>
-    <pre><code>
-Yes, please!
-    </code></pre>
+    <pre><code>$ zpkg ls
+gimp
+zpkg
+
+$ zpkg freeze
+zpkg add gimp --from alpine --apk gimp
+zpkg add zpkg --from-github ihucos/zpkg
+
+$ zpkg rm gimp</code></pre>
 
     <h2>
       Usage
