@@ -4,46 +4,62 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>zpkg - the universal package manager</title>
+    <link href="https://fonts.googleapis.com/css?family=B612+Mono&display=swap" rel="stylesheet">
+
     <style type="text/css">
-      h1, h2, h3 {
-        text-align: center;
+      h1 {
+        font-size: 3.5em;
+        color: #EFD048 !important;
       }
       h2 {
-        border-top: 1px solid black;
-        margin-top: 5rem;
+        font-size: 2.5em;
+        color: #E64571;
+      }
+      h1, h2 {
+        margin-bottom: 0px;
+        margin-top: 0.5rem;
         padding-top: 0.5rem;
+        text-align: center;
+        text-transform: uppercase;
       }
       pre {
         margin: 0px;
-        border: 1px solid black;
-        background-color: black;
-        color: white;
-        overflow: auto;
+        padding: 1em;
+        border-radius: 4px;
+        border: 0.15em solid #327CB7;
+        color: lightgreen;
+        overflow: visible;
+      }
+      #install {
+        border: 0.15em solid #E64571;
       }
       #subheadline {
         text-align: center;
         font-weight: bold;
         font-size: 1.25em;
+        color: #327CB7;
+        text-transform: uppercase;
       }
       body {
         margin-left: 20%;
         margin-right: 20%;
         margin-bottom: 5rem;
         margin-top: 5rem;
+        background-color: #272016;
+        color: #EEDCC8;
+
+               font-family: 'B612 Mono', monospace;
       }
       table {
         display: inline-block;
       }
-      table td:nth-of-type(1) {
-        padding-right: 1rem;
-      }
-      table td:nth-of-type(2) {
-        padding-left: 1rem;
-      }
       table td {
         vertical-align: top;
         width: 50%;
-        padding-bottom: 2rem;
+        padding-bottom: 0.5rem;
+      }
+      table td pre {
+        border: 0.15em solid #EEDCC8;
       }
     </style>
   </head>
@@ -52,13 +68,13 @@
       zpkg
     </h1>
     <div id="subheadline">
-        Install packages from any distribution
+        Use programs from any distribution
     </div>
 
     <h2>
       Install
     </h2>
-    <pre><code>$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local</code></pre>
+    <pre id="install"><code>$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local</code></pre>
 
     <h2>
       What does zpkg do?
@@ -154,4 +170,6 @@ EXAMPLE
     zpkg add -A gimp
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf</code></pre>
+
+<a style="position: absolute; right: 0px; top: 0px;" href="https://github.com/you"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_orange_ff7600.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 </html>
