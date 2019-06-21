@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>zpkg - the universal package manager</title>
     <style type="text/css">
+      h1, h2, h3 {
+        text-align: center;
+      }
+      body {
+        margin-left: 20%;
+        margin-right: 20%;
+        margin-bottom: 5rem;
+      }
+      table {
+        display: inline-block;
+      }
       table td:nth-of-type(1) {
-        max-width: 20rem;
+        padding-right: 1rem;
+      }
+      table td:nth-of-type(2) {
+        padding-left: 1rem;
       }
       table td {
         vertical-align: top;
+        width: 50%;
+        padding-bottom: 2rem;
       }
     </style>
   </head>
@@ -24,20 +40,22 @@
     <h2>
       Install
     </h2>
-    <pre>
-$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local
-    </pre>
+    <nobr>
+      <code>
+        $ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local
+      </code>
+    </nobr>
 
     <h2>
       What does zpkg do?
     </h2>
-    <table border=3>
+    <table>
       <tr>
         <td>
           zpkg installs programs from any linux distribution
         </td>
         <td>
-          <pre>$ zpkg add gimp --from alpine --apk gimp</pre>
+          <code>$ zpkg add gimp --from alpine --apk gimp</code>
         </td>
       </tr>
 
@@ -46,9 +64,10 @@ $ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar 
           zpkg installs your programs to your home directory. Global installations are also supported (via -g).
         </td>
         <td>
-          <pre>$ file ~/.local/bin/gimp
-/home/ihucos/.local/bin/gimp: symbolic link to ../lib/zpkg/gimp/gimp
-          </pre>
+          <code>
+            $ file ~/.local/bin/gimp<br />
+            /home/ihucos/.local/bin/gimp: symbolic link to ../lib/zpkg/gimp/gimp
+          </code>
         </td>
       <tr>
 
@@ -57,14 +76,14 @@ $ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar 
           you can create linux distribution agnostic packages. This is by the way how zpkg is distributed.
         </td>
         <td>
-          <pre>
-$ zpkg package gimp /tmp/gimp.zpkg
-Install package locally:
-$ tar -xf /tmp/gimp.zpkg -C ~/.local 
-
-Install package globally:
-$ tar -xf /tmp/gimp.zpkg -C /usr/local
-<pre>
+          <code>
+            $ zpkg package gimp /tmp/gimp.zpkg <br />
+            Install package locally: <br />
+            $ tar -xf /tmp/gimp.zpkg -C ~/.local  <br />
+            <br />
+            Install package globally: <br />
+            $ tar -xf /tmp/gimp.zpkg -C /usr/local <br />
+<code>
         </td>
       </tr>
 
@@ -73,8 +92,8 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local
           you can upgrade all packages
         </td>
         <td>
-          <pre>$ zpkg clear
-$ zpkg rebuild</pre>
+          <code>$ zpkg clear
+$ zpkg rebuild</code>
         </td>
       </tr>
 
@@ -124,6 +143,5 @@ EXAMPLE
     zpkg add xeyes -U x11-apps
     zpkg add -A gimp
     zpkg add -A py3-pip --pip3 yapf
-    zpkg rm yapf
-</pre>
+    zpkg rm yapf</pre>
 </html>
