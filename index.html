@@ -208,17 +208,17 @@ $ zpkg --help</code></pre>
 
 
     <pre id="usage"><code>USAGE
-    zpkg [-g] {add,package,ls,clear,rm} ...
+    zpkg [-g] {add,clear,freeze,ls,package,rebuild,rm,upgrade} ...
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
-    clear                  clear build cache
-    du                     show disk usage
+    clear                  clears the build cache
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
-    rebuild [PKG1,PKG2...] rebuild given or all packages
+    rebuild PKG            rebuild given package
     rm PKG                 uninstalls the given package
+    upgrade                upgrades each package atomically
 
 ARGUMENTS
     --global, -g
@@ -233,6 +233,23 @@ BUILD ARGUMENTS
         adds a layer for build caching
     --from-github
         build according to instructions at GitHub project
+    --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
+    --pacman, --pip, --pip3, --yum
+        Invokes the given tool with it's primary action
+    -A  same as `--from alpine --apk`
+    -C  same as `--from centos --yum`
+    -D  same as `--from debian --apt`
+    -F  same as `--from fedora --dnf`
+    -G  same as `--from gentoo --emerge`
+    -R  same as `--from archlinux --pacman`
+    -U  same as `--from ubuntu --apt`
+
+EXAMPLE
+    zpkg add xeyes -U x11-apps
+    zpkg add -A gimp
+    zpkg add -A py3-pip --pip3 yapf
+    zpkg rm yapf
+cording to instructions at GitHub project
     --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
     --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action

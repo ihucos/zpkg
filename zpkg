@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """USAGE
-    zpkg [-g] {add,package,ls,clear,rm} ...
+    zpkg [-g] {add,clear,freeze,ls,package,rebuild,rm,upgrade} ...
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
-    clear                  clear build cache
-    du                     show disk usage
+    clear                  clears the build cache
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
     rebuild PKG            rebuild given package
     rm PKG                 uninstalls the given package
+    upgrade                upgrades each package atomically
 
 ARGUMENTS
     --global, -g
@@ -149,7 +149,7 @@ if not len(sys.argv) >= 2:
 elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
 elif not sys.argv[1] in [
-        "add", "ls", "freeze", "rebuild", "rm", "clear", "package", "du", "upgrade"
+        "add", "ls", "freeze", "rebuild", "rm", "clear", "package", "upgrade"
 ]:
     die("no such subcommand, try --help")
 
@@ -165,12 +165,6 @@ if sys.argv[1] not in ("package", "ls"):
 if sys.argv[1] == "ls":
     for pkg in os.listdir(DATADIR):
         print(pkg)
-
-#####
-# zpkg du
-#####
-if sys.argv[1] == "du":
-    os.execlp("plash", "plash", "sudo", "du", "-sh", DATADIR, PLASH_DATA)
 
 #####
 # zpkg freeze
