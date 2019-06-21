@@ -9,7 +9,7 @@ SUBCOMMANDS
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
-    rebuild [PKG1,PKG2...] rebuild given or all packages
+    rebuild PKG            rebuild given package
     rm PKG                 uninstalls the given package
 
 ARGUMENTS
@@ -189,28 +189,23 @@ elif sys.argv[1] == "freeze":
 #####
 elif sys.argv[1] == "rebuild":
 
-    rebuild = sys.argv[2:]
-    if not rebuild:
-        rebuild = os.listdir(DATADIR)
+    try:
+        pkg = sys.argv[2]
+    except IndexError:
+        die("usage: zpkg [-g] rebuild PKG")
 
-    #plash_call('purge', '--yes')
-    #plash_call('init')
+    if not os.path.exists(join(DATADIR, pkg)):
+        die("package {} is not installed".format(repr(pkg)))
 
-    for pkg in rebuild:
-        if not os.path.exists(join(DATADIR, pkg)):
-            die("package {} is not installed".format(repr(pkg)))
-
-        try:
-            with open(join(DATADIR, pkg, 'buildargs')) as f:
-                build_args = shlex.split(f.read())
-        except FileNotFoundError:
-            print("zpkg: skip {} (no build steps)".format(pkg),
-                  file=sys.stderr)
-            continue
-
+    try:
+        with open(join(DATADIR, pkg, 'buildargs')) as f:
+            build_args = shlex.split(f.read())
+    except FileNotFoundError:
+        print("zpkg: skip {} (no build steps)".format(pkg),
+              file=sys.stderr)
+    else:
         tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA,
                                            "tmp"))  # reuse plash's tmp
-
         cont = plash_call("map", pkg)
         if cont:
             plash_call("rm", cont)
