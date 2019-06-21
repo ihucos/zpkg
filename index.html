@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zpkg - the universal package manager</title>
+    <style type="text/css">
+      table td:nth-of-type(1) {
+        max-width: 20rem;
+      }
+      table td {
+        vertical-align: top;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      zpkg
+    </h1>
+    <div>
+        Install packages from any distribution
+    <div>
+
+    <h2>
+      Install
+    </h2>
+    <pre>
+$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local
+    </pre>
+
+    <h2>
+      What does zpkg do?
+    </h2>
+    <table border=3>
+      <tr>
+        <td>
+          zpkg installs programs from any linux distribution
+        </td>
+        <td>
+          <pre>$ zpkg add gimp --from alpine --apk gimp</pre>
+        </td>
+      </tr>
+
+      </tr>
+        <td>
+          zpkg installs your programs to your home directory. Global installations are also supported (via -g).
+        </td>
+        <td>
+          <pre>$ file ~/.local/bin/gimp
+/home/ihucos/.local/bin/gimp: symbolic link to ../lib/zpkg/gimp/gimp
+          </pre>
+        </td>
+      <tr>
+
+      <tr>
+        <td>
+          you can create linux distribution agnostic packages. This is by the way how zpkg is distributed.
+        </td>
+        <td>
+          <pre>
+$ zpkg package gimp /tmp/gimp.zpkg
+Install package locally:
+$ tar -xf /tmp/gimp.zpkg -C ~/.local 
+
+Install package globally:
+$ tar -xf /tmp/gimp.zpkg -C /usr/local
+<pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          you can upgrade all packages
+        </td>
+        <td>
+          <pre>$ zpkg clear
+$ zpkg rebuild</pre>
+        </td>
+      </tr>
+
+    </table>
+
+    <h2>
+      Usage
+    </h2>
+    <pre>USAGE
+    zpkg [-g] {add,package,ls,clear,rm} ...
+
+SUBCOMMANDS
+    add [PKG] BUILD-ARGS   builds and adds a package
+    clear                  clear build cache
+    du                     show disk usage
+    freeze                 print package with build instruction
+    ls                     lists all installed packages
+    package PKG FILE       creates a standalone package
+    rebuild [PKG1,PKG2...] rebuild given or all packages
+    rm PKG                 uninstalls the given package
+
+ARGUMENTS
+    --global, -g
+        affects the system globally
+
+BUILD ARGUMENTS
+    --from, -f
+        choose a base image
+    --run, -x
+        run any shell (/bin/sh) command
+    --layer, -l
+        adds a layer for build caching
+    --from-github
+        build according to instructions at GitHub project
+    --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
+    --pacman, --pip, --pip3, --yum
+        Invokes the given tool with it's primary action
+    -A  same as `--from alpine --apk`
+    -C  same as `--from centos --yum`
+    -D  same as `--from debian --apt`
+    -F  same as `--from fedora --dnf`
+    -G  same as `--from gentoo --emerge`
+    -R  same as `--from archlinux --pacman`
+    -U  same as `--from ubuntu --apt`
+
+EXAMPLE
+    zpkg add xeyes -U x11-apps
+    zpkg add -A gimp
+    zpkg add -A py3-pip --pip3 yapf
+    zpkg rm yapf
+</pre>
+</html>
