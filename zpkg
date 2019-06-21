@@ -149,7 +149,7 @@ if not len(sys.argv) >= 2:
 elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
 elif not sys.argv[1] in [
-        "add", "ls", "freeze", "rebuild", "rm", "clear", "package", "du"
+        "add", "ls", "freeze", "rebuild", "rm", "clear", "package", "du", "upgrade"
 ]:
     die("no such subcommand, try --help")
 
@@ -211,8 +211,6 @@ elif sys.argv[1] == "rebuild":
             plash_call("rm", cont)
             plash_call("clean")
 
-        print("zpkg: build {}".format(pkg), file=sys.stderr)
-
         builded = plash_call("build", "--run", BOOTSTRAP_SCRIPT, "--layer",
                              "--run", "", "--layer", *build_args)
         plash_call("shallow-copy", builded, tmpdir)
@@ -241,6 +239,18 @@ elif sys.argv[1] == "rm":
 #####
 elif sys.argv[1] == "clear":
     plash_call("purge", '--yes')
+
+#####
+# zpkg upgrade
+#####
+elif sys.argv[1] == "upgrade":
+    plash_call("purge", '--yes')
+    for pkg in os.listdir(DATADIR):
+        p = subprocess.Popen([sys.argv[0], 'rebuild', pkg])
+        print("zpkg: build {}".format(pkg), file=sys.stderr)
+        exitcode = p.wait()
+        if exitcode:
+            sys.exit(exitcode)
 
 #####
 # zpkg package
