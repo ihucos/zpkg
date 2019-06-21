@@ -8,7 +8,7 @@
 
     <style type="text/css">
       h1 {
-        font-size: 3.5em;
+        font-size: 4em;
         color: #EFD048 !important;
       }
       h2 {
@@ -27,11 +27,16 @@
         padding: 1em;
         border-radius: 4px;
         border: 0.15em solid #327CB7;
-        color: lightgreen;
+        color: #61bb61;
         overflow: visible;
       }
       #install {
         border: 0.15em solid #E64571;
+        border-right: none;
+
+        /* just because of overflow */
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
       }
       #subheadline {
         text-align: center;
@@ -57,6 +62,9 @@
         vertical-align: top;
         width: 50%;
         padding-bottom: 0.5rem;
+      }
+      table td:nth-of-type(1) {
+        font-size: 0.85em;
       }
       table td pre {
         border: 0.15em solid #EEDCC8;
