@@ -8,10 +8,28 @@
       h1, h2, h3 {
         text-align: center;
       }
+      h2 {
+        border-top: 1px solid black;
+        margin-top: 5rem;
+        padding-top: 0.5rem;
+      }
+      pre {
+        margin: 0px;
+        border: 1px solid black;
+        background-color: black;
+        color: white;
+        overflow: auto;
+      }
+      #subheadline {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.25em;
+      }
       body {
         margin-left: 20%;
         margin-right: 20%;
         margin-bottom: 5rem;
+        margin-top: 5rem;
       }
       table {
         display: inline-block;
@@ -33,18 +51,14 @@
     <h1>
       zpkg
     </h1>
-    <div>
+    <div id="subheadline">
         Install packages from any distribution
-    <div>
+    </div>
 
     <h2>
       Install
     </h2>
-    <nobr>
-      <code>
-        $ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local
-      </code>
-    </nobr>
+    <pre><code>$ curl -Lf https://github.com/ihucos/zpkg/releases/download/0.2/zpkg.zpkg | tar -xJf - -C ~/.local</code></pre>
 
     <h2>
       What does zpkg do?
@@ -55,7 +69,7 @@
           zpkg installs programs from any linux distribution
         </td>
         <td>
-          <code>$ zpkg add gimp --from alpine --apk gimp</code>
+          <pre><code>$ zpkg add gimp --from alpine --apk gimp</code></pre>
         </td>
       </tr>
 
@@ -64,10 +78,8 @@
           zpkg installs your programs to your home directory. Global installations are also supported (via -g).
         </td>
         <td>
-          <code>
-            $ file ~/.local/bin/gimp<br />
-            /home/ihucos/.local/bin/gimp: symbolic link to ../lib/zpkg/gimp/gimp
-          </code>
+          <pre><code>$ readlink ~/.local/bin/gimp
+../lib/zpkg/gimp/gimp</code></pre>
         </td>
       <tr>
 
@@ -76,14 +88,12 @@
           you can create linux distribution agnostic packages. This is by the way how zpkg is distributed.
         </td>
         <td>
-          <code>
-            $ zpkg package gimp /tmp/gimp.zpkg <br />
-            Install package locally: <br />
-            $ tar -xf /tmp/gimp.zpkg -C ~/.local  <br />
-            <br />
-            Install package globally: <br />
-            $ tar -xf /tmp/gimp.zpkg -C /usr/local <br />
-<code>
+          <pre><code>$ zpkg package gimp /tmp/gimp.zpkg
+Install package locally:
+$ tar -xf /tmp/gimp.zpkg -C ~/.local
+
+Install package globally:
+$ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
         </td>
       </tr>
 
@@ -92,8 +102,8 @@
           you can upgrade all packages
         </td>
         <td>
-          <code>$ zpkg clear
-$ zpkg rebuild</code>
+          <pre><code>$ zpkg clear
+$ zpkg rebuild</code></pre>
         </td>
       </tr>
 
@@ -102,7 +112,7 @@ $ zpkg rebuild</code>
     <h2>
       Usage
     </h2>
-    <pre>USAGE
+    <pre><code>USAGE
     zpkg [-g] {add,package,ls,clear,rm} ...
 
 SUBCOMMANDS
@@ -143,5 +153,5 @@ EXAMPLE
     zpkg add xeyes -U x11-apps
     zpkg add -A gimp
     zpkg add -A py3-pip --pip3 yapf
-    zpkg rm yapf</pre>
+    zpkg rm yapf</code></pre>
 </html>
