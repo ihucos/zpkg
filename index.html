@@ -26,7 +26,6 @@
         margin: 0px;
         padding: 1em;
         border-radius: 4px;
-        border: 0.15em solid #61bb61;
         color: #61bb61;
         overflow: visible;
       }
@@ -51,14 +50,9 @@
         margin-bottom: 5rem;
         margin-top: 5rem;
         max-width: 79em;
-        background-color: #272016;
+        background-color: #211b12;
         color: #EEDCC8;
-
-               font-family: 'B612 Mono', monospace;
-      }
-      #usage {
-        color: #E64571;
-        border: 0.15em solid #E64571;
+        font-family: 'B612 Mono', monospace;
       }
       table {
         display: inline-block;
@@ -73,8 +67,30 @@
         font-size: 0.85em;
       }
       table td pre {
-        border: 0.15em solid #EEDCC8;
+        /* slightly smaller border */
+        border: 0.10em solid #EEDCC8;
       }
+
+      #usage {
+        color: #EEDCC8;
+        border: 0.15em solid #61bb61;
+
+        border-top: none;
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+        margin-top: 0px;
+        padding-top: 0px;
+      }
+      #examples {
+        border: 0.15em solid #EEDCC8;
+
+        border-bottom: none;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+      }
+
     </style>
   </head>
   <body>
@@ -149,7 +165,7 @@ orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem 
     <h2>
       More examples
     </h2>
-    <pre><code>$ zpkg ls
+    <pre id="examples"><code>$ zpkg ls
 gimp
 zpkg
 
@@ -157,11 +173,18 @@ $ zpkg freeze
 zpkg add gimp --from alpine --apk gimp
 zpkg add zpkg --from-github ihucos/zpkg
 
-$ zpkg rm gimp</code></pre>
+$ zpkg rm gimp
+
+$ zpkg add --from ubuntu --apt gimp
+
+$ zpkg --help</code></pre>
+
 
     <h2>
       Usage
     </h2>
+
+
     <pre id="usage"><code>USAGE
     zpkg [-g] {add,package,ls,clear,rm} ...
 
