@@ -6,9 +6,13 @@
     <title>zpkg - the universal package manager</title>
 
     <link href="https://fonts.googleapis.com/css?family=B612+Mono&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet"> 
 
     <style type="text/css">
+      li, td {
+        font-size: 0.85em;
+      }
+      li {margin-bottom: 0.25em;}
+      ul {margin-top: 0px;}
       h1 {
         font-size: 4em;
         color: #EFD048 !important;
@@ -46,10 +50,8 @@
         color: #327CB7;
         text-transform: uppercase;
       }
-      #how {
-        font-family: 'Roboto Mono', monospace;
-      }
       body {
+
         margin-left: 20%;
         margin-right: 20%;
         margin-bottom: 5rem;
@@ -69,7 +71,6 @@
         padding-bottom: 0.5rem;
       }
       table td:nth-of-type(1) {
-        font-size: 0.85em;
         padding-right: 2em;
       }
       table td pre {
@@ -99,6 +100,13 @@
         padding-bottom: 0px;
       }
 
+      a:link,
+      a:visited,
+      a:hover,
+      a:active {
+        color: #EEDCC8;
+      } 
+
     </style>
   </head>
   <body>
@@ -120,7 +128,7 @@
     <table>
       <tr>
         <td>
-          zpkg installs programs from any linux distribution
+          With zpkg you can install programs from other distributions into your system
         </td>
         <td>
           <pre><code>$ zpkg add gimp --from alpine --apk gimp</code></pre>
@@ -129,7 +137,7 @@
 
       </tr>
         <td>
-          zpkg installs your programs to your home directory. Global installations are also supported (via -g).
+          zpkg will install programs to your home directory. Global installations are also supported (via <i>-g</i>).
         </td>
         <td>
           <pre><code>$ readlink ~/.local/bin/gimp
@@ -139,7 +147,16 @@
 
       <tr>
         <td>
-          you can create linux distribution agnostic packages. This is by the way how zpkg is distributed.
+          You can upgrade zpkg packages. Upgrading is an atomic operation for each package.
+        </td>
+        <td>
+          <pre><code>$ zpkg upgrade</code></pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          It is possible to repackage added programs into standalone zpkg packages. These packages can be easily installed into other machines. The only system requirement is <i>tar</i>. Standalone zpkg packages may be managed (removed, upgraded) with zpkg.
         </td>
         <td>
           <pre><code>$ zpkg package gimp /tmp/gimp.zpkg
@@ -151,24 +168,21 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
         </td>
       </tr>
 
-      <tr>
-        <td>
-          you can upgrade all packages
-        </td>
-        <td>
-          <pre><code>$ zpkg clear
-$ zpkg rebuild</code></pre>
-        </td>
-      </tr>
 
     </table>
 
     <h2>
-      How does it work?
+      What else should I know?
     </h2>
-    <div id="how">
-orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
     <div>
+      <ul>
+      <li>
+      For package managers that need multi user support - like <i>apt</i> - you need <i>newuidmap</i> installed and <i>/etc/subuid</i> configured (Done in Ubuntu).
+      </li>
+      <li>
+      Acutally all of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
+      </li>
+      </ul>
 
     <h2>
       More examples
