@@ -1,7 +1,6 @@
 
 # zpkg
-With zpkg you can install and use programs from other distributions
-
+With zpkg you can install and use programs from other distributions. See https://ihucos.github.io/zpkg/
 
 ## Install
 ```
