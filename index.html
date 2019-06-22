@@ -11,8 +11,14 @@
       li, td {
         font-size: 0.85em;
       }
-      li {margin-bottom: 0.25em;}
-      ul {margin-top: 0px;}
+      li {
+        margin-bottom: 0.5em;
+        list-style-type: none;
+      }
+      ul {
+        margin-top: 0px;
+        padding-left: 0px;
+      }
       h1 {
         font-size: 4em;
         color: #EFD048 !important;
@@ -51,7 +57,6 @@
         text-transform: uppercase;
       }
       body {
-
         margin-left: 20%;
         margin-right: 20%;
         margin-bottom: 5rem;
@@ -176,12 +181,18 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
     </h2>
     <div>
       <ul>
-      <li>
-      For package managers that need multi user support - like <i>apt</i> - you need <i>newuidmap</i> installed and <i>/etc/subuid</i> configured (Done in Ubuntu).
-      </li>
-      <li>
-      Acutally all of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
-      </li>
+        <li>
+          For package managers that need multi user support - like <i>apt</i> - you need <i>newuidmap</i> installed and <i>/etc/subuid</i> configured when running zpkg unprivileged (Done in Ubuntu).
+        </li>
+        <li>
+          Packages should never change files of it's base system.
+        </li>
+        <li>
+          "System Programs" may not work. As an example: Bash, synaptic, apt, or gnome-tweak-tool may not work as desired. LibreOffice, Firefox, Gimp or pylint work fine.
+        </li>
+        <li>
+          All of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
+        </li>
       </ul>
 
     <h2>
