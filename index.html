@@ -89,7 +89,7 @@
         list-style-type: disc;
       }
       #faq h3 {
-        margin-top: 0.5em;
+        margin-top: 0.25em;
       }
       #faq h3:first-of-type {
         margin-top: 0px;
@@ -203,12 +203,6 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
         <li>
           Packages should never change files of it's base system.
         </li>
-        <li>
-          "System Programs" may not work. As an example: Bash, synaptic, apt, or gnome-tweak-tool may not work as desired. LibreOffice, Firefox, Gimp and pylint work fine.
-        </li>
-        <li>
-          All of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
-        </li>
       </ul>
     </div>
 
@@ -304,44 +298,66 @@ EXAMPLE
   How stable is zpkg?
   </h3>
   <div>
-    Consider it beta.
+    Beta.
   </div>
   
   <h3>
   How is zpkg is licenced?
   </h3>
   <div>
-    zpkg and <a href="http://plash.io">plash</a> are under the MIT licence
+    zpkg and <a href="http://plash.io">plash</a> are under the MIT licence.
   </div>
   
   <h3>
-  What are possible use cases for zpkg?
+    What are all things I can do with zpkg?
   </h3>
   <ul>
     <li>
-      Using applications from other distributions.
+      Quickly using applications from other Linux distributions.
     </li>
     <li>
-     Installing applications with unprivileged users.
+     Installing applications without root.
     </li>
     <li>
-     Distribute applications (zpkg package).
+     Distributing applications wit <i>zpkg package</i>. This is by the way how zpkg is distributed.
     </li>
     <li>
-     Deploy applications (zpkg package).
+     Deploy web applications or services with <i>zpkg package</i>.
     </li>
     <li>
-     Having distribution independent application in your home folder (e.G. for a USB stick).
+     Having distribution independent applications in your home folder or a usb stick.
     </li>
   </ul>
-  
+
+  <h3>
+    What applications work with zpkg?
+  </h3>
+  <div>
+    System Programs may not work. As an example: <i>Bash</i>, <i>synaptic</i>, <i>apt</i>, and <i>gnome-tweak-tool</i> may not work as desired. <i>LibreOffice</i>, <i>Firefox</i>, <i>Gimp</i> and <i>pylint</i> are fully supported.
+  </div>
+
+
+  <h3>
+    Which build commands are supported?
+  </h3>
+  <div>
+    All of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
+  </div>
+
+  <h3>
+    What happens if a package changes files of its base image?
+  </h3>
+  <div>
+    This would also affect other packages with the same base image. If that ever happens you need to remove the bad package (<i>zpkg rm badpkg</i>) and upgrade (<i>zpkg upgrade</i>).
+  </div>
+</div>
+
   <h3>
   Can I contribute?
   </h3>
   <div>
-    <a href="http://github.com/ihucos/zpkg">Absolutely</a>
+    <a href="http://github.com/ihucos/zpkg">Absolutely.</a>
   </div>
-</div>
 
 <a style="position: absolute; right: 0px; top: 0px;" href="https://github.com/ihucos/zpkg"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_orange_ff7600.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 </html>
