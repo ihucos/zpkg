@@ -27,12 +27,18 @@
         font-size: 2.5em;
         color: #E64571;
       }
-      h1, h2 {
+      h1, h2, h3 {
         margin-bottom: 0px;
         margin-top: 0.5rem;
         padding-top: 0.5rem;
         text-align: center;
         text-transform: uppercase;
+      }
+      h3 {
+        margin-top: 0px;
+        padding-top: 0px;
+        font-size: 1.25em;
+        color: #327CB7;
       }
       pre {
         margin: 0px;
@@ -48,13 +54,6 @@
         /* just because of overflow */
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
-      }
-      #subheadline {
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.25em;
-        color: #327CB7;
-        text-transform: uppercase;
       }
       body {
         margin-left: 20%;
@@ -118,9 +117,9 @@
     <h1>
       zpkg
     </h1>
-    <div id="subheadline">
+    <h3>
         Use programs from other Linux distributions
-    </div>
+    </h3>
 
     <h2>
       Install
@@ -277,6 +276,53 @@ EXAMPLE
     zpkg add -A gimp
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf</code></pre>
+
+
+<h2>
+  FAQ
+</h2>
+
+<h3>
+How stable is zpkg?
+</h3>
+<div>
+  Consider it beta.
+</div>
+
+<h3>
+How is zpkg is licenced?
+</h3>
+<div>
+  zpkg and <a href="http://plash.io">plash</a> are under the MIT licence
+</div>
+
+<h3>
+What are possible use cases for zpkg?
+</h3>
+<ul>
+  <li>
+    Using applications from other distributions.
+  </li>
+  <li>
+   Installing applications with unprivileged users.
+  </li>
+  <li>
+   Distribute applications (zpkg package).
+  </li>
+  <li>
+   Deploy applications (zpkg package).
+  </li>
+  <li>
+   Having distribution independent application in your home folder (e.G. for a USB stick).
+  </li>
+</ul>
+
+<h3>
+Can I contribute?
+</h3>
+<div>
+  <a href="http://github.com/ihucos/zpkg">Yes please!</a>
+</div>
 
 <a style="position: absolute; right: 0px; top: 0px;" href="https://github.com/ihucos/zpkg"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_orange_ff7600.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 </html>
