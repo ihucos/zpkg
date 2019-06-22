@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css?family=B612+Mono&display=swap" rel="stylesheet">
 
     <style type="text/css">
-      li, td {
-        font-size: 0.85em;
+      li, td, div {
+        font-size: 0.85rem;
       }
-      li {
+      ul li {
         margin-bottom: 0.5em;
         list-style-type: none;
       }
@@ -56,6 +56,9 @@
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
       }
+      #whatelse ul li {
+        font-size: 1rem;
+      }
       body {
         margin-left: 20%;
         margin-right: 20%;
@@ -82,7 +85,15 @@
         /* slightly smaller border */
         border: 0.10em solid #EEDCC8;
       }
-
+      #faq ul li {
+        list-style-type: disc;
+      }
+      #faq h3 {
+        margin-top: 0.5em;
+      }
+      #faq h3:first-of-type {
+        margin-top: 0px;
+      }
       #usage {
         color: #EEDCC8;
         border: 0.15em solid #EFD048;
@@ -184,7 +195,7 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
     <h2>
       What else should I know?
     </h2>
-    <div>
+    <div id='whatelse'>
       <ul>
         <li>
           For package managers that need multi user support - like <i>apt</i> - you need <i>newuidmap</i> installed and <i>/etc/subuid</i> configured when running zpkg unprivileged (Done in Ubuntu).
@@ -199,6 +210,7 @@ $ tar -xf /tmp/gimp.zpkg -C /usr/local<code></pre>
           All of <i><a href="http://plash.io">plash's</a></i> build commands are supported when adding packages.
         </li>
       </ul>
+    </div>
 
     <h2>
       More examples
@@ -284,50 +296,51 @@ EXAMPLE
     zpkg rm yapf</code></pre>
 
 
-<h2>
-  FAQ
-</h2>
-
-<h3>
-How stable is zpkg?
-</h3>
-<div>
-  Consider it beta.
-</div>
-
-<h3>
-How is zpkg is licenced?
-</h3>
-<div>
-  zpkg and <a href="http://plash.io">plash</a> are under the MIT licence
-</div>
-
-<h3>
-What are possible use cases for zpkg?
-</h3>
-<ul>
-  <li>
-    Using applications from other distributions.
-  </li>
-  <li>
-   Installing applications with unprivileged users.
-  </li>
-  <li>
-   Distribute applications (zpkg package).
-  </li>
-  <li>
-   Deploy applications (zpkg package).
-  </li>
-  <li>
-   Having distribution independent application in your home folder (e.G. for a USB stick).
-  </li>
-</ul>
-
-<h3>
-Can I contribute?
-</h3>
-<div>
-  <a href="http://github.com/ihucos/zpkg">Absolutely</a>
+<div id="faq">
+  <h2>
+    FAQ
+  </h2>
+  <h3>
+  How stable is zpkg?
+  </h3>
+  <div>
+    Consider it beta.
+  </div>
+  
+  <h3>
+  How is zpkg is licenced?
+  </h3>
+  <div>
+    zpkg and <a href="http://plash.io">plash</a> are under the MIT licence
+  </div>
+  
+  <h3>
+  What are possible use cases for zpkg?
+  </h3>
+  <ul>
+    <li>
+      Using applications from other distributions.
+    </li>
+    <li>
+     Installing applications with unprivileged users.
+    </li>
+    <li>
+     Distribute applications (zpkg package).
+    </li>
+    <li>
+     Deploy applications (zpkg package).
+    </li>
+    <li>
+     Having distribution independent application in your home folder (e.G. for a USB stick).
+    </li>
+  </ul>
+  
+  <h3>
+  Can I contribute?
+  </h3>
+  <div>
+    <a href="http://github.com/ihucos/zpkg">Absolutely</a>
+  </div>
 </div>
 
 <a style="position: absolute; right: 0px; top: 0px;" href="https://github.com/ihucos/zpkg"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_orange_ff7600.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
