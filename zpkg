@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 """USAGE
-    zpkg [-g] {add,clear,freeze,ls,package,rebuild,rm,upgrade} ...
+    zpkg [-g|-l] {add,flush,freeze,ls,package,rebuild,rm,upgrade} ...
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
-    clear                  clears the build cache
+    flush                  flushes the build cache
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
     rebuild PKG            rebuild given package
     rm PKG                 uninstalls the given package
+    unfreeze FREEZED-FILE  apply frozen file
     upgrade                upgrades each package atomically
 
 ARGUMENTS
     --global, -g
         affects the system globally
+    --local, -l
+        saves packages in cwd under ./zpkg
 
 BUILD ARGUMENTS
     --from, -f
@@ -43,7 +46,7 @@ EXAMPLE
     zpkg rm yapf"""
 
 import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime, signal
-from os.path import join
+from os.path import join, expanduser
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 BCHROOT_FILE = join(dir_path, 'bchroot')
@@ -54,22 +57,29 @@ os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] +
 
 if len(sys.argv) > 1 and sys.argv[1] in ('-g', '--global'):
     sys.argv.pop(1)
-    DATADIR = "/usr/local/lib/zpkg"
-    BINDIR = "/usr/local/bin"
-    PLASH_DATA = "/var/cache/zpkg"
+    zpkg_install_dir = "/usr/local/"
+    zpkg_cache_dir = "/var/cache/zpkg"
+elif len(sys.argv) > 1 and sys.argv[1] in ('-l', '--local'):
+    sys.argv.pop(1)
+    zpkg_install_dir = ".local"
+    zpkg_cache_dir = "~/.cache/zpkg"
 else:
-    DATADIR = os.path.expanduser("~/.local/lib/zpkg")
-    BINDIR = os.path.expanduser("~/.local/bin")
-    PLASH_DATA = os.path.expanduser("~/.cache/zpkg")
+    zpkg_install_dir = "~/.local"
+    zpkg_cache_dir = "~/.cache/zpkg"
 
-zpkg_install_dir = os.environ.get("ZPKG_INSTALL_DIR")
-if zpkg_install_dir:
-    DATADIR = os.path.expanduser(join(zpkg_install_dir, "lib/zpkg"))
-    BINDIR = os.path.expanduser(join(zpkg_install_dir, "bin"))
+# try to overwrite with env vars
+try:
+    zpkg_install_dir = os.environ["ZPKG_INSTALL_DIR"]
+except KeyError:
+    pass
+try:
+    zpkg_cache_dir = os.environ["ZPKG_CACHE_DIR"]
+except KeyError:
+    pass
 
-zpkg_cache_dir = os.environ.get("ZPKG_CACHE_DIR")
-if zpkg_cache_dir:
-    PLASH_DATA = zpkg_cache_dir
+DATADIR = expanduser(join(zpkg_install_dir, "lib/zpkg"))
+BINDIR = expanduser(join(zpkg_install_dir, "bin"))
+PLASH_DATA = expanduser(zpkg_cache_dir)
 
 os.environ["PLASH_DATA"] = PLASH_DATA
 
@@ -149,7 +159,7 @@ if not len(sys.argv) >= 2:
 elif sys.argv[1] in ["-h", "--help", "help"]:
     usage()
 elif not sys.argv[1] in [
-        "add", "ls", "freeze", "rebuild", "rm", "clear", "package", "upgrade"
+        "add", "ls", "freeze", "rebuild", "rm", "flush", "package", "upgrade", "unfreeze"
 ]:
     die("no such subcommand, try --help")
 
@@ -179,6 +189,36 @@ elif sys.argv[1] == "freeze":
         print('zpkg add {} {}'.format(pkg, args))
 
 #####
+# zpkg unfreeze
+#####
+elif sys.argv[1] == "unfreeze":
+    try:
+        freezed_file = sys.argv[2]
+    except IndexError:
+        die("usage: zpkg [-g|-l] unfreeze FREEZED-FILE")
+    try:
+        with open(freezed_file, "r") as f:
+            freezed = f.readlines()
+    except OSError as exc:
+        die(exc)
+
+    tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))
+    os.environ["ZPKG_INSTALL_DIR"] = tmpdir
+    for freeze_line in freezed:
+        cmd = shlex.split(freeze_line[:-1])
+        if not cmd[:2] == ["zpkg", "add"]:
+            die('freeze file must start with: zpkg add ...')
+        p = subprocess.Popen([sys.argv[0], 'add'] + cmd[2:])
+        exitcode = p.wait()
+        if exitcode:
+            sys.exit(exitcode)
+
+    src = tmpdir
+    dst = expanduser(zpkg_install_dir)
+    info("rename {} => {}".format(src, dst))
+    swap_paths(src.encode(), dst.encode())
+
+#####
 # zpkg rebuild
 #####
 elif sys.argv[1] == "rebuild":
@@ -186,7 +226,7 @@ elif sys.argv[1] == "rebuild":
     try:
         pkg = sys.argv[2]
     except IndexError:
-        die("usage: zpkg [-g] rebuild PKG")
+        die("usage: zpkg [-g|-l] rebuild PKG")
 
     if not os.path.exists(join(DATADIR, pkg)):
         die("package {} is not installed".format(repr(pkg)))
@@ -195,8 +235,7 @@ elif sys.argv[1] == "rebuild":
         with open(join(DATADIR, pkg, 'buildargs')) as f:
             build_args = shlex.split(f.read())
     except FileNotFoundError:
-        print("zpkg: skip {} (no build steps)".format(pkg),
-              file=sys.stderr)
+        info("skip {} (no build steps)".format(pkg))
     else:
         tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA,
                                            "tmp"))  # reuse plash's tmp
@@ -229,9 +268,9 @@ elif sys.argv[1] == "rm":
                join(BINDIR, sys.argv[2]))
 
 #####
-# zpkg clear
+# zpkg flush
 #####
-elif sys.argv[1] == "clear":
+elif sys.argv[1] == "flush":
     plash_call("purge", '--yes')
 
 #####
@@ -241,7 +280,7 @@ elif sys.argv[1] == "upgrade":
     plash_call("purge", '--yes')
     for pkg in os.listdir(DATADIR):
         p = subprocess.Popen([sys.argv[0], 'rebuild', pkg])
-        print("zpkg: build {}".format(pkg), file=sys.stderr)
+        info("build {}".format(pkg))
         exitcode = p.wait()
         if exitcode:
             sys.exit(exitcode)
@@ -251,7 +290,7 @@ elif sys.argv[1] == "upgrade":
 #####
 elif sys.argv[1] == "package":
     if len(sys.argv) < 4:
-        die("usage: zpkg [-g] package PROGRAM OUTFILE")
+        die("usage: zpkg [-g|-l] package PROGRAM OUTFILE")
     assert_is_installed(sys.argv[2])
     plash_call("sudo", "tar", "-C", os.path.dirname(BINDIR), "-cJf",
                sys.argv[3], join("bin", sys.argv[2]),
@@ -267,7 +306,7 @@ elif sys.argv[1] == "package":
 #####
 elif sys.argv[1] == "add":
     if len(sys.argv) <= 2:
-        die("usage: zpkg [-g] add [PKG] BUILD-ARGS")
+        die("usage: zpkg [-g|-l] add [PKG] BUILD-ARGS")
 
     if sys.argv[2].startswith("-"):
         sys.argv.insert(2, "?")
@@ -317,11 +356,11 @@ elif sys.argv[1] == "add":
         pass
     os.symlink(join("../lib/zpkg", sys.argv[2], sys.argv[2]), launcher)
 
-    home = os.path.expanduser('~')
+    home = expanduser('~')
     datadir = targetdir.replace(home, '~')
     launcher = launcher.replace(home, '~')
-    print("zpkg: installed {} to {}, linked to {}".format(
-        repr(sys.argv[2]), datadir, launcher))
+    info("installed {} to {}".format(
+        sys.argv[2], launcher))
     #print("linked to: {}".format(launcher))
 
     # map it, so it can be deleted
