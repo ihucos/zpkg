@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	brt_whitelist_env("HOME");
 	brt_whitelist_env("PATH");
 	brt_whitelist_env(NULL);
-	brt_whitelist_envs_from_env("BCHROOT_EXPORT");
+	brt_whitelist_envs_from_env("ZPKG_EXPORT");
 
 	/* exec away */
 	argv[0] = program_invocation_short_name;

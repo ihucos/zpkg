@@ -310,6 +310,10 @@ elif sys.argv[1] == "add":
     launcher = join(BINDIR, sys.argv[2])
     os.mkdir(join(tmpdir, "bin"))
     shutil.copy2(BCHROOT_FILE, join(tmpdir, "bin", sys.argv[2]))
+    os.link(join(tmpdir, "bin", sys.argv[2]),
+                join(tmpdir, "bin", 'sh'))
+    os.link(join(tmpdir, "bin", sys.argv[2]),
+                join(tmpdir, "bin", 'env'))
     os.rename(tmpdir, targetdir)
     os.chmod(targetdir, 0o755)
     try:
