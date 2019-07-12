@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 	     *str,
 	     *progpath = realpath("/proc/self/exe", NULL),
 	     *origpwd = get_current_dir_name(),
-	     *rootfs = dirname(strdup(progpath)); // FIXME: check for no memory error
+	     *rootfs = dirname(dirname(strdup(progpath))); // FIXME: check for no memory error
 
 	if (!progpath) brt_fatal("realpath");
 	if (!origpwd)  brt_fatal("get_current_dir_name");
