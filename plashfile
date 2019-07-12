@@ -14,7 +14,7 @@ down() {
   chmod +x        /usr/local/bin/"$2"
 }
 down https://github.com/ihucos/build-fuse-overlayfs/releases/download/03-04-2019/fuse-overlayfs fuse-overlayfs
-down https://github.com/ihucos/bchroot/releases/download/0.3/bchroot bchroot
+down https://raw.githubusercontent.com/ihucos/zpkg/master/run run
 down https://raw.githubusercontent.com/ihucos/zpkg/master/zpkg origzpkg
 down https://raw.githubusercontent.com/ihucos/zpkg/master/bootstrap.sh bootstrap.sh
 

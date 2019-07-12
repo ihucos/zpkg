@@ -46,7 +46,7 @@ import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime, signal
 from os.path import join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-BCHROOT_FILE = join(dir_path, 'run')
+RUNNER_FILE = join(dir_path, 'run')
 BOOTSTRAP_SCRIPT = open(join(dir_path, 'bootstrap.sh')).read()
 
 os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] +
@@ -310,7 +310,7 @@ elif sys.argv[1] == "add":
     targetdir = join(DATADIR, sys.argv[2])
     launcher = join(BINDIR, sys.argv[2])
     os.mkdir(join(tmpdir, "bin"))
-    shutil.copy2(BCHROOT_FILE, join(tmpdir, "bin", sys.argv[2]))
+    shutil.copy2(RUNNER_FILE, join(tmpdir, "bin", sys.argv[2]))
     os.link(join(tmpdir, "bin", sys.argv[2]),
                 join(tmpdir, "bin", 'sh'))
     os.link(join(tmpdir, "bin", sys.argv[2]),
