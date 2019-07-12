@@ -286,6 +286,7 @@ elif sys.argv[1] == "add":
                          "--run", "", "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
     os.chmod(join(tmpdir, "rootfs"), 0o755)
+    os.mkdir(join(tmpdir, "rootfs", "host"))
     nodepath = plash_call("nodepath", builded)
     base = nodepath.split("/layer/")[1].split("/")[1]
     orig_cmds = set(plash_call('run', base, *LIST_ALL_CMD).splitlines())
