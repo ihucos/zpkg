@@ -49,7 +49,7 @@ import sys, os, subprocess, shutil, tempfile, shlex, shutil, datetime, signal
 from os.path import join, expanduser
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-BCHROOT_FILE = join(dir_path, 'bchroot')
+RUNNER_FILE = join(dir_path, 'run')
 BOOTSTRAP_SCRIPT = open(join(dir_path, 'bootstrap.sh')).read()
 
 os.environ["PATH"] = ":".join([join(dir_path, "plash/bin")] +
@@ -325,6 +325,7 @@ elif sys.argv[1] == "add":
                          "--run", "", "--layer", *sys.argv[2:])
     plash_call("shallow-copy", builded, join(tmpdir, "rootfs"))
     os.chmod(join(tmpdir, "rootfs"), 0o755)
+    os.mkdir(join(tmpdir, "rootfs", "host"))
     nodepath = plash_call("nodepath", builded)
     base = nodepath.split("/layer/")[1].split("/")[1]
     orig_cmds = set(plash_call('run', base, *LIST_ALL_CMD).splitlines())
@@ -347,14 +348,19 @@ elif sys.argv[1] == "add":
 
     targetdir = join(DATADIR, sys.argv[2])
     launcher = join(BINDIR, sys.argv[2])
-    shutil.copy2(BCHROOT_FILE, join(tmpdir, sys.argv[2]))
+    os.mkdir(join(tmpdir, "bin"))
+    shutil.copy2(RUNNER_FILE, join(tmpdir, "bin", sys.argv[2]))
+    os.link(join(tmpdir, "bin", sys.argv[2]),
+                join(tmpdir, "bin", 'sh'))
+    os.link(join(tmpdir, "bin", sys.argv[2]),
+                join(tmpdir, "bin", 'env'))
     os.rename(tmpdir, targetdir)
     os.chmod(targetdir, 0o755)
     try:
         os.unlink(launcher)
     except FileNotFoundError:
         pass
-    os.symlink(join("../lib/zpkg", sys.argv[2], sys.argv[2]), launcher)
+    os.symlink(join("../lib/zpkg", sys.argv[2], "bin", sys.argv[2]), launcher)
 
     home = expanduser('~')
     datadir = targetdir.replace(home, '~')
