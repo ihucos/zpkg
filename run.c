@@ -4,42 +4,31 @@
 
 
 #define PRESET_PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+#define ROOTFS "../rootfs/"
 
 
 int main(int argc, char* argv[]) {
-	char 
-	     *token,
-	     *str,
-	     *progpath = realpath("/proc/self/exe", NULL),
-	     *origpwd = get_current_dir_name(),
-	     *rootfs = dirname(dirname(strdup(progpath))); // FIXME: check for no memory error
+	char *origpwd;
 
-	if (!progpath) brt_fatal("realpath");
-	if (!origpwd)  brt_fatal("get_current_dir_name");
 
-	chdir(rootfs
-	     ) != -1 || brt_fatal("cd %s", rootfs);
-	chdir("./rootfs"
-	     ) != -1 || brt_fatal("cd %s/rootfs", rootfs);
-
-	/* give us "fake root" */
 	if (getuid()) brt_setup_user_ns();
 
 	brt_setup_mount_ns();
 
-        brt_bind_mount("/dev", "./dev");
-        brt_bind_mount("/home", "./home");
-        brt_bind_mount("/proc", "./proc");
-        brt_bind_mount("/root", "./root");
-        brt_bind_mount("/sys", "./sys");
-        brt_bind_mount("/tmp", "./tmp");
-        brt_bind_mount("/", "./host");
-        brt_bind_mount("/etc/resolv.conf", "./etc/resolv.conf");
+        brt_bind_mount("/dev",             brt_path(ROOTFS "dev"));
+        brt_bind_mount("/home",            brt_path(ROOTFS "home"));
+        brt_bind_mount("/proc",            brt_path(ROOTFS "proc"));
+        brt_bind_mount("/root",            brt_path(ROOTFS "root"));
+        brt_bind_mount("/sys",             brt_path(ROOTFS "sys"));
+        brt_bind_mount("/tmp",             brt_path(ROOTFS "tmp"));
+        brt_bind_mount("/",                brt_path(ROOTFS "host"));
+        brt_bind_mount("/etc/resolv.conf", brt_path(ROOTFS "etc/resolv.conf"));
 
-	chroot("."
-	      ) != -1 || brt_fatal("could not chroot to %s/rootfs",
-	                           get_current_dir_name());
+        origpwd = get_current_dir_name();
+	if (!origpwd) brt_fatal("get_current_dir_name");
 
+	chroot(brt_path(ROOTFS)
+	      ) != -1 || brt_fatal("could not chroot to %s", ROOTFS);
 	brt_chdir(origpwd);
 
 	putenv("PATH=" PRESET_PATH);
@@ -53,5 +42,5 @@ int main(int argc, char* argv[]) {
 	/* exec away */
 	argv[0] = program_invocation_short_name;
 	execvp(argv[0], argv
-		) != -1 || brt_fatal("chroot %s/rootfs %s", rootfs, argv[0]);
+		) != -1 || brt_fatal("exec %s", argv[0]);
 }
