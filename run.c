@@ -8,9 +8,6 @@
 
 
 int main(int argc, char* argv[]) {
-	char *origpwd;
-
-
 	if (getuid()) brt_setup_user_ns();
 
 	brt_setup_mount_ns();
@@ -24,13 +21,6 @@ int main(int argc, char* argv[]) {
         brt_bind_mount("/",                brt_path(ROOTFS "host"));
         brt_bind_mount("/etc/resolv.conf", brt_path(ROOTFS "etc/resolv.conf"));
 
-        origpwd = get_current_dir_name();
-	if (!origpwd) brt_fatal("get_current_dir_name");
-
-	chroot(brt_path(ROOTFS)
-	      ) != -1 || brt_fatal("could not chroot to %s", ROOTFS);
-	brt_chdir(origpwd);
-
 	putenv("PATH=" PRESET_PATH);
 	brt_whitelist_env("TERM");
 	brt_whitelist_env("DISPLAY");
@@ -38,6 +28,8 @@ int main(int argc, char* argv[]) {
 	brt_whitelist_env("PATH");
 	brt_whitelist_env(NULL);
 	brt_whitelist_envs_from_env("ZPKG_EXPORT");
+
+	brt_chroot(brt_path(ROOTFS));
 
 	/* exec away */
 	argv[0] = program_invocation_short_name;
