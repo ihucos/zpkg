@@ -262,6 +262,12 @@ elif sys.argv[1] == "rm":
         plash_call("rm", cont)
         plash_call("clean")
 
+    if sys.argv[2] == "zpkg":
+        die("can't do; try: rm {} {} -rf".format(
+                                      join(DATADIR, sys.argv[2]),
+                                      join(BINDIR, sys.argv[2])))
+        sys.exit(1)
+
     tmpdir = tempfile.mkdtemp(dir=join(PLASH_DATA, "tmp"))
     os.rename(join(DATADIR, sys.argv[2]), tmpdir)
     os.execlp("plash", "plash", "sudo", "rm", "-rf", tmpdir,
