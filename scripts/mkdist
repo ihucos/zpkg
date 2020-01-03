@@ -5,5 +5,5 @@ export ZPKG_INSTALL_DIR=$(mktemp -d)
 export ZPKG_CACHE_DIR=$(mktemp -d)
 
 ./zpkg add zpkg --from-github ihucos/zpkg
-mkdir -p dist
-./zpkg package zpkg dist/zpkg.zpkg
+mkdir -p ../dist
+./zpkg package zpkg ../dist/zpkg.zpkg
