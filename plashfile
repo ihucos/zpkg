@@ -2,21 +2,22 @@
 alpine
 
 --run
-apk add --no-cache curl gnupg python3 xz
+apk add --no-cache curl gnupg python3 xz musl musl-dev gcc make
 
 --layer
 --run
-
-curl -Lf https://github.com/ihucos/plash/archive/master.tar.gz | tar -xzC / --strip-components=1
 
 down() {
   curl -Lf "$1" > /usr/local/bin/"$2"
   chmod +x        /usr/local/bin/"$2"
 }
 down https://github.com/ihucos/build-fuse-overlayfs/releases/download/03-04-2019/fuse-overlayfs fuse-overlayfs
-down https://raw.githubusercontent.com/ihucos/zpkg/master/src/run run
-down https://raw.githubusercontent.com/ihucos/zpkg/master/src/zpkg origzpkg
-down https://raw.githubusercontent.com/ihucos/zpkg/master/src/bootstrap.sh bootstrap.sh
+
+mkdir /opt/zpkg
+cd /opt/zpkg
+curl -Lf https://github.com/ihucos/plash/archive/master.tar.gz | tar -xzC / --strip-components=1
+curl -Lf https://github.com/ihucos/zpkg/archive/master.tar.gz | tar -xzC /opt/zpkg --strip-components=1
+make PLASH_LIB=/opt/plash/lib/c CC=gcc
 
 --entrypoint
 /usr/local/bin/zpkg
@@ -24,4 +25,4 @@ down https://raw.githubusercontent.com/ihucos/zpkg/master/src/bootstrap.sh boots
 /usr/local/bin/zpkg
 #!/bin/sh
 export PLASH_INIT_UNION_TASTE=fuse-overlayfs
-exec origzpkg "$@"
+exec /opt/zpkg/src/zpkg "$@"
