@@ -14,9 +14,9 @@ down() {
   chmod +x        /usr/local/bin/"$2"
 }
 down https://github.com/ihucos/build-fuse-overlayfs/releases/download/03-04-2019/fuse-overlayfs fuse-overlayfs
-down https://raw.githubusercontent.com/ihucos/zpkg/master/run run
-down https://raw.githubusercontent.com/ihucos/zpkg/master/zpkg origzpkg
-down https://raw.githubusercontent.com/ihucos/zpkg/master/bootstrap.sh bootstrap.sh
+down https://raw.githubusercontent.com/ihucos/zpkg/master/src/run run
+down https://raw.githubusercontent.com/ihucos/zpkg/master/src/zpkg origzpkg
+down https://raw.githubusercontent.com/ihucos/zpkg/master/src/bootstrap.sh bootstrap.sh
 
 --entrypoint
 /usr/local/bin/zpkg

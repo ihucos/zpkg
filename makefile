@@ -4,8 +4,8 @@ CFLAGS=-static -I$(PLASH_LIB)
 
 all: run
 
-run: run.c
-	$(CC) $(CFLAGS) -o run run.c $(PLASH_LIB)/plash.c
+run: src/run.c
+	$(CC) $(CFLAGS) -o src/run src/run.c $(PLASH_LIB)/plash.c
 
 clean:
-	rm run
+	rm src/run
