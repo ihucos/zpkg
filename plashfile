@@ -17,6 +17,8 @@ mkdir /opt/zpkg
 cd /opt/zpkg
 curl -Lf https://github.com/ihucos/plash/archive/master.tar.gz | tar -xzC / --strip-components=1
 curl -Lf https://github.com/ihucos/zpkg/archive/master.tar.gz | tar -xzC /opt/zpkg --strip-components=1
+
+plash init
 plash -A musl musl-dev gcc make -- make PLASH_LIB=/opt/plash/lib/c CC=gcc
 
 --entrypoint
