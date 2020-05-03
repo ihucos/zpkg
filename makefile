@@ -1,4 +1,4 @@
-PLASH_LIB=../plash/opt/plash/lib/c
+PLASH_LIB=../plash/lib
 CC=musl-gcc
 CFLAGS=-static -I$(PLASH_LIB)
 
