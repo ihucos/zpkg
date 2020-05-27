@@ -131,6 +131,11 @@
     </style>
   </head>
   <body>
+    <script>
+        fetch('https://simple-web-analytics.com/track?' + new URLSearchParams(
+            {site: 'zpkg', utcoffset: 2, referrer: document.referrer}))
+    </script>
+    
     <h1>
       zpkg
     </h1>
