@@ -131,9 +131,12 @@
     </style>
   </head>
   <body>
+
     <script>
-        fetch('https://simple-web-analytics.com/track?' + new URLSearchParams(
-            {site: 'zpkg', utcoffset: 2, referrer: document.referrer}))
+    document.referrer && 0 === document.referrer.indexOf(location.protocol + "//" + location.host) || fetch(
+    "https://simple-web-analytics.com/track?" + new URLSearchParams({referrer: document.referrer,
+        site: "zpkg",
+        utcoffset: 2}));
     </script>
     
     <h1>
