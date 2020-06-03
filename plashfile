@@ -1,5 +1,5 @@
 --from
-alpine
+alpine:3.11
 
 --run
 apk add --no-cache curl gnupg python3 xz
