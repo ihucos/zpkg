@@ -2,7 +2,7 @@
 alpine:3.11
 
 --run
-apk add --no-cache curl gnupg python3 xz apk add bash make gcc
+apk add --no-cache curl gnupg python3 xz bash make gcc
 
 --layer
 --run
