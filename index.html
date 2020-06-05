@@ -238,21 +238,24 @@ $ zpkg --help</code></pre>
 
 
     <pre id="usage"><code>USAGE
-    zpkg [-g] {add,clear,freeze,ls,package,rebuild,rm,upgrade} ...
+    zpkg [-g|-l] {add,flush,freeze,ls,package,rebuild,rm,upgrade} ...
 
 SUBCOMMANDS
     add [PKG] BUILD-ARGS   builds and adds a package
-    clear                  clears the build cache
+    flush                  flushes the build cache
     freeze                 print package with build instruction
     ls                     lists all installed packages
     package PKG FILE       creates a standalone package
     rebuild PKG            rebuild given package
     rm PKG                 uninstalls the given package
+    unfreeze FREEZED-FILE  apply frozen file
     upgrade                upgrades each package atomically
 
 ARGUMENTS
     --global, -g
         affects the system globally
+    --local, -l
+        saves packages in cwd under ./zpkg
 
 BUILD ARGUMENTS
     --from, -f
@@ -266,38 +269,19 @@ BUILD ARGUMENTS
     --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
     --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action
-    -A  same as `--from alpine --apk`
-    -C  same as `--from centos --yum`
-    -D  same as `--from debian --apt`
-    -F  same as `--from fedora --dnf`
-    -G  same as `--from gentoo --emerge`
-    -R  same as `--from archlinux --pacman`
-    -U  same as `--from ubuntu --apt`
-
-EXAMPLE
-    zpkg add xeyes -U x11-apps
-    zpkg add -A gimp
-    zpkg add -A py3-pip --pip3 yapf
-    zpkg rm yapf
-cording to instructions at GitHub project
-    --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
-    --pacman, --pip, --pip3, --yum
-        Invokes the given tool with it's primary action
-    -A  same as `--from alpine --apk`
-    -C  same as `--from centos --yum`
-    -D  same as `--from debian --apt`
-    -F  same as `--from fedora --dnf`
-    -G  same as `--from gentoo --emerge`
-    -R  same as `--from archlinux --pacman`
-    -U  same as `--from ubuntu --apt`
+    -A same as `--from alpine:edge --apk`
+    -C same as `--from centos:8 --yum`
+    -D same as `--from debian:sid --apt`
+    -F same as `--from fedora:32 --dnf`
+    -G same as `--from gentoo:current --emerge`
+    -R same as `--from archlinux:current --pacman`
+    -U same as `--from ubuntu:focal --apt`
 
 EXAMPLE
     zpkg add xeyes -U x11-apps
     zpkg add -A gimp
     zpkg add -A py3-pip --pip3 yapf
     zpkg rm yapf</code></pre>
-
-
 <div id="faq">
   <h2>
     FAQ
