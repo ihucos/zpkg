@@ -31,13 +31,13 @@ BUILD ARGUMENTS
     --add-apt-repository, --apt, --apk, --apt, --dnf, --emerge, --npm,
     --pacman, --pip, --pip3, --yum
         Invokes the given tool with it's primary action
-    -A  same as `--from alpine --apk`
-    -C  same as `--from centos --yum`
-    -D  same as `--from debian --apt`
-    -F  same as `--from fedora --dnf`
-    -G  same as `--from gentoo --emerge`
-    -R  same as `--from archlinux --pacman`
-    -U  same as `--from ubuntu --apt`
+    -A same as `--from alpine:edge --apk`
+    -C same as `--from centos:8 --yum`
+    -D same as `--from debian:sid --apt`
+    -F same as `--from fedora:32 --dnf`
+    -G same as `--from gentoo:current --emerge`
+    -R same as `--from archlinux:current --pacman`
+    -U same as `--from ubuntu:focal --apt`
 
 EXAMPLE
     zpkg add xeyes -U x11-apps
