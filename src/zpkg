@@ -302,10 +302,10 @@ elif sys.argv[1] == "package":
                sys.argv[3], join("bin", sys.argv[2]),
                join("lib/zpkg", sys.argv[2]))
     print(("Install package locally:\n"
-           "$ tar -xf {0} -C ~/.local \n"
+           "tar -xf {0} -C ~/.local \n"
            "\n"
            "Install package globally:\n"
-           "$ tar -xf {0} -C /usr/local").format(shlex.quote(sys.argv[3])))
+           "tar -xf {0} -C /usr/local").format(shlex.quote(sys.argv[3])))
 
 #####
 # zpkg add
