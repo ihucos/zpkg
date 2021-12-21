@@ -2,16 +2,10 @@
 alpine:3.15
 
 --run
-apk add --no-cache curl gnupg python3 xz bash make gcc libc-dev
+apk add --no-cache curl gnupg python3 xz bash make gcc libc-dev fuse-overlayfs
 
 --layer
 --run
-
-down() {
-  curl -Lf "$1" > /usr/local/bin/"$2"
-  chmod +x        /usr/local/bin/"$2"
-}
-down https://github.com/ihucos/build-fuse-overlayfs/releases/download/03-04-2019/fuse-overlayfs fuse-overlayfs
 
 mkdir /opt/zpkg
 cd /opt/zpkg
