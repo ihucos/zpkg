@@ -1,5 +1,5 @@
 --from
-alpine:3.11
+alpine:3.15
 
 --run
 apk add --no-cache curl gnupg python3 xz bash make gcc libc-dev
