@@ -12,9 +12,9 @@
 #define HOST_ENVS_PREFIX "HOST_"
 
 void import_env(char *env){
-	char* val = getenv(pl_sprintf(HOST_ENVS_PREFIX "%s", optarg));
+	char* val = getenv(pl_sprintf(HOST_ENVS_PREFIX "%s", env));
 	if (val){
-		putenv(pl_sprintf("%s=%s", optarg, val));
+		putenv(pl_sprintf("%s=%s", env, val));
 	}
 }
 
