@@ -9,6 +9,14 @@
 
 #define PRESET_PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 #define ROOTFS "../rootfs/"
+#define HOST_ENVS_PREFIX "HOST_"
+
+void import_env(char *env){
+	char* val = getenv(pl_sprintf(HOST_ENVS_PREFIX "%s", optarg));
+	if (val){
+		putenv(pl_sprintf("%s=%s", optarg, val));
+	}
+}
 
 
 int main(int argc, char* argv[]) {
@@ -26,12 +34,15 @@ int main(int argc, char* argv[]) {
         pl_bind_mount("/etc/resolv.conf", pl_path(ROOTFS "etc/resolv.conf"));
 
 	putenv("PATH=" PRESET_PATH);
-	pl_whitelist_env("TERM");
-	pl_whitelist_env("DISPLAY");
-	pl_whitelist_env("HOME");
-	pl_whitelist_env("PATH");
-	pl_whitelist_envs_from_env("ZPKG_EXPORT");
-	pl_whitelist_env(NULL);
+
+	// add prefix to all envs
+	for (size_t i = 0; environ[i]; i++) {
+		environ[i] = pl_sprintf(HOST_ENVS_PREFIX "%s", environ[i]);
+	}
+	import_env("TERM");
+	import_env("DISPLAY");
+	import_env("HOME");
+	import_env("PATH");
 
 	pl_chroot(pl_path(ROOTFS));
 
